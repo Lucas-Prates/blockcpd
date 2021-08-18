@@ -1,0 +1,34 @@
+Package: blockcpd
+Title: Change point detection for several indepedent time series
+Version: 0.0.0.9000
+Authors@R: 
+    c(person(given = "Lucas",
+           family = "Prates",
+           role = c("aut", "cre"),
+           email = "lucasdelprates@gmail.com",
+           comment = c(ORCID = "0000-0002-6431-8232")),
+      person(given = "Florencia",
+           family = "Leonardi",
+           role = c("aut"),
+           email = "florencia@usp.br",
+           comment = c(ORCID = "0000-0002-0299-0680"))
+    )
+Description:  The blockcpd package implements statistical models based on 
+    regularized likelihood to perform offline change point detection when working
+    with multiple indepedent time series. It detects changes in parameters for the
+    specified family, so in a sense it detects "blocks of random variables" which
+    have the same parameter.
+License: GPL (>= 2)
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
+Imports: 
+    Rcpp
+LinkingTo: 
+    Rcpp,
+    RcppArmadillo
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
