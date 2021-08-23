@@ -20,14 +20,25 @@ generate_na = function(n_samples, prob){
 #' @param m Array length.
 #' @param k Number of change points.  The number of blocks is \eqn{k + 1}. It is
 #' overridden if changepoints is non-NULL.
-#' @param family The family model to be sampled. Currently, bernoulli and normal
-#' are available. Consecutive blocks have different probability parameters for
-#' the bernoulli, and normal has different mean and variance.
+#' @param family The family model to be sampled. The families currently
+#' implemented are:
+#'
+#' \itemize{
+#'  \item[bernoulli] Sample independent Bernoullis with probability parameter
+#'  of the block
+#'  \item[normal] Sample independent Normal with mean and variance specified
+#'  by the block.
+#'  \item[binaryMarkov] Samples a two state Markov Chain process with transition
+#'  matrix defined by the block.
+#'  \item[exponential] Sample independent Exponential with scale parameter
+#'  defined by the block.
+#'  \item[poisson] Sample independent Poisson with rate parameter defined
+#'  by the block.
+#' }
 #' @param parameters List of parameters containing \eqn{k + 1} dimensional
 #' parameter vectors of each block. If NULL, the parameters are sampled
-#' randomly. If specified, pass a list of probabilities for the bernoulli,
-#' and a list of two vectors for the normal: the first is the vector of the
-#' means, and the second the vector of the variances
+#' randomly.
+#'
 #' @param changepoints A sorted vector of size \eqn{k} containing integers as
 #'  change point locations. The change points are between 1 and \eqn{m-1}. If
 #'  NULL, the change points are sampled uniformly in \eqn{[1, m-1]}.
@@ -50,7 +61,16 @@ rcpd = function(n = 100,
       stop(paste0("Input error! The number of change points k must be between ",
                   "0 and m."))
     }
-    changepoints = sort(c(0, sample(1:(m-1), k, replace = FALSE), m))
+    if(family == "binaryMarkov"){
+      k = min(k, floor(m/2))
+      changepoints = sort(c(0, sample(2:(m-2), k, replace = FALSE), m))
+      while(min(diff(changepoints)) == 1){
+        changepoints = sort(c(0, sample(2:(m-2), k, replace = FALSE), m))
+      }
+    }
+    else{
+      changepoints = sort(c(0, sample(1:(m-1), k, replace = FALSE), m))
+    }
   }
 
   # Check if the change point vector provided is valid
@@ -69,7 +89,9 @@ rcpd = function(n = 100,
 
 
   #---------
-  IMPLEMENTED_FAMILIES = c("normal", "bernoulli")
+  IMPLEMENTED_FAMILIES = c("normal", "bernoulli", "binaryMarkov",
+                           "exponential", "poisson")
+
   if (!(family %in% IMPLEMENTED_FAMILIES)){
     stop(paste0("Input error! The argument 'family' provided is not
                  the list of possible families."))
@@ -82,7 +104,7 @@ rcpd = function(n = 100,
       return(stats::rbinom(n , size = 1, parameters[[1]][i]))
     }
   }
-  else if(family == "normal"){
+  if(family == "normal"){
     if (is.null(parameters)) {
       mean_vec = stats::rnorm(k + 1, 0, 10)
       var_vec = stats::rexp(k + 1)
@@ -95,6 +117,47 @@ rcpd = function(n = 100,
       )
     }
   }
+
+
+  # For this family in specific, the sampler has a different form
+  # since it is not independent
+  if(family == "binaryMarkov"){
+    if (is.null(parameters)) {
+      parameters = list(prob00 = stats::runif(k+1),
+                        prob11 = stats::runif(k+1))
+    }
+    data_matrix = rcpd_cpp(family = "binaryMarkov",
+                           n,
+                           m,
+                           changepoints,
+                           parameters)
+    if(prob_NA != 0){
+      data_matrix = data_matrix * generate_na(n*m, prob_NA)
+    }
+    data_list = list(data_matrix = data.matrix(data_matrix),
+                     changepoints = changepoints[-c(1, k+2)], # remove 0 and m
+                     parameters = parameters)
+    return(data_list)
+  }
+
+  if(family == "exponential"){
+    if (is.null(parameters)) {
+      parameters = list(scale = stats::runif(k+1))
+    }
+    sampler = function(n, i){
+      return(stats::rexp(n, 1.0/parameters[[1]][i]))
+    }
+  }
+
+  if(family == "poisson"){
+    if (is.null(parameters)) {
+      parameters = list(rate = stats::runif(k+1))
+    }
+    sampler = function(n, i){
+      return(stats::rpois(n , parameters[[1]][i]))
+    }
+  }
+
   # Generate data
   data_matrix = matrix(0, nrow = n, ncol = m)
   for (i in 1:(k + 1)) {

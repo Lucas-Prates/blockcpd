@@ -23,5 +23,22 @@ compute_suff_stats = function(data_matrix, family){
                      )
   }
 
+  if(family == "binaryMarkov"){
+    suff_stats = compute_suff_stats_cpp(data_matrix, family)
+  }
+
+
+  if(family == "exponential"){
+    suff_stats = list(cumsum(colSums(data_matrix, na.rm = T)),
+                      cumsum(colSums(!is.na(data_matrix)))
+                     )
+  }
+
+  if(family == "poisson"){
+    suff_stats = list(cumsum(colSums(data_matrix, na.rm = T)),
+                      cumsum(colSums(!is.na(data_matrix)))
+                     )
+  }
+
   return(suff_stats)
 }

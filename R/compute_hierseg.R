@@ -20,7 +20,7 @@ compute_hierseg = function(suff_stats,
                            lambda = 1,
                            n,
                            m,
-                           pen_func = bic_loss_hs,
+                           pen_func = bic_loss,
                            max_blocks = NULL) {
 
   # max_blocks is not used in this function

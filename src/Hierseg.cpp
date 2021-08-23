@@ -45,11 +45,11 @@ void Hierseg::binary_split(const int& left_index,
 
     new_left_nll = compute_negloglike(left_index, j);
     //negloglike + regularization
-    new_left_loss = compute_loss(left_index, j);
+    new_left_loss = new_left_nll + compute_regularization(left_index, j);
 
     new_right_nll = compute_negloglike(j + 1, right_index);
     //negloglike + regularization
-    new_right_loss = compute_loss(j + 1, right_index);
+    new_right_loss = new_right_nll + compute_regularization(j + 1, right_index);
 
     if(new_left_loss + new_right_loss < left_loss + right_loss){
       left_loss = new_left_loss;

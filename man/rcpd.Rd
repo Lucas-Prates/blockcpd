@@ -22,15 +22,25 @@ rcpd(
 \item{k}{Number of change points.  The number of blocks is \eqn{k + 1}. It is
 overridden if changepoints is non-NULL.}
 
-\item{family}{The family model to be sampled. Currently, bernoulli and normal
-are available. Consecutive blocks have different probability parameters for
-the bernoulli, and normal has different mean and variance.}
+\item{family}{The family model to be sampled. The families currently
+implemented are:
+
+\itemize{
+\item\link{bernoulli} Sample independent Bernoullis with probability parameter
+of the block
+\item\link{normal} Sample independent Normal with mean and variance specified
+by the block.
+\item\link{binaryMarkov} Samples a two state Markov Chain process with transition
+matrix defined by the block.
+\item\link{exponential} Sample independent Exponential with scale parameter
+defined by the block.
+\item\link{poisson} Sample independent Poisson with rate parameter defined
+by the block.
+}}
 
 \item{parameters}{List of parameters containing \eqn{k + 1} dimensional
 parameter vectors of each block. If NULL, the parameters are sampled
-randomly. If specified, pass a list of probabilities for the bernoulli,
-and a list of two vectors for the normal: the first is the vector of the
-means, and the second the vector of the variances}
+randomly.}
 
 \item{changepoints}{A sorted vector of size \eqn{k} containing integers as
 change point locations. The change points are between 1 and \eqn{m-1}. If

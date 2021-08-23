@@ -25,13 +25,13 @@ toy_regularization = function(left_index, right_index, n, m){
 }
 
 # Regular BIC loss
-bic_loss_hs = function(left_index, right_index, n, m){
+bic_loss = function(left_index, right_index, n, m){
   loss = log(n)
   return(loss)
 }
 
 # Square root loss in n
-sqrt_loss_hs = function(left_index, right_index, n, m){
+sqrt_loss = function(left_index, right_index, n, m){
   loss = sqrt(n)
   return(loss)
 }

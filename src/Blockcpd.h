@@ -31,6 +31,9 @@ public:
   // plus the penalization function provided by the user
   float compute_loss(const int& left_index, const int& right_index);
 
+  // Returns regularization value on interval
+  float compute_regularization(const int& left_index, const int& right_index);
+
   void sort_changepoints();
 
   // FITS -> Parameters
