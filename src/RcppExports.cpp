@@ -35,6 +35,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// compute_suff_stats_cpp
+List compute_suff_stats_cpp(const IntegerMatrix& data_mat, const String& family);
+RcppExport SEXP _blockcpd_compute_suff_stats_cpp(SEXP data_matSEXP, SEXP familySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const IntegerMatrix& >::type data_mat(data_matSEXP);
+    Rcpp::traits::input_parameter< const String& >::type family(familySEXP);
+    rcpp_result_gen = Rcpp::wrap(compute_suff_stats_cpp(data_mat, family));
+    return rcpp_result_gen;
+END_RCPP
+}
 // compute_rand
 float compute_rand(IntegerVector cp1, IntegerVector cp2, int const& m);
 RcppExport SEXP _blockcpd_compute_rand(SEXP cp1SEXP, SEXP cp2SEXP, SEXP mSEXP) {
@@ -84,14 +96,31 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// rcpd_cpp
+NumericMatrix rcpd_cpp(String family, int n, int m, IntegerVector changepoints, List parameters);
+RcppExport SEXP _blockcpd_rcpd_cpp(SEXP familySEXP, SEXP nSEXP, SEXP mSEXP, SEXP changepointsSEXP, SEXP parametersSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< String >::type family(familySEXP);
+    Rcpp::traits::input_parameter< int >::type n(nSEXP);
+    Rcpp::traits::input_parameter< int >::type m(mSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type changepoints(changepointsSEXP);
+    Rcpp::traits::input_parameter< List >::type parameters(parametersSEXP);
+    rcpp_result_gen = Rcpp::wrap(rcpd_cpp(family, n, m, changepoints, parameters));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_blockcpd_compute_dynseg_cpp", (DL_FUNC) &_blockcpd_compute_dynseg_cpp, 5},
     {"_blockcpd_compute_hierseg_cpp", (DL_FUNC) &_blockcpd_compute_hierseg_cpp, 4},
+    {"_blockcpd_compute_suff_stats_cpp", (DL_FUNC) &_blockcpd_compute_suff_stats_cpp, 2},
     {"_blockcpd_compute_rand", (DL_FUNC) &_blockcpd_compute_rand, 3},
     {"_blockcpd_compute_hausdorff", (DL_FUNC) &_blockcpd_compute_hausdorff, 2},
     {"_blockcpd_compute_symdiff", (DL_FUNC) &_blockcpd_compute_symdiff, 2},
     {"_blockcpd_compute_jaccard", (DL_FUNC) &_blockcpd_compute_jaccard, 2},
+    {"_blockcpd_rcpd_cpp", (DL_FUNC) &_blockcpd_rcpd_cpp, 5},
     {NULL, NULL, 0}
 };
 

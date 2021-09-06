@@ -24,10 +24,11 @@ compute_dynseg = function(suff_stats,
                           n,
                           m,
                           max_blocks = m - 1,
-                          pen_func = bic_loss_hs){
+                          pen_func = bic_loss){
 
   if (is.null(max_blocks)) {max_blocks = m - 1}
   if (max_blocks >= m) {max_blocks = m - 1}
+  if (family == "binaryMarkov"){max_blocks = min(floor(m/2), max_blocks)}
   if (max_blocks <= 0) {max_blocks = 1}
 
   # Penalization function that will be called in .cpp extension

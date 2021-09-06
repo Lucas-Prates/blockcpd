@@ -11,7 +11,7 @@ compute_dynseg(
   n,
   m,
   max_blocks = m - 1,
-  pen_func = bic_loss_hs
+  pen_func = bic_loss
 )
 }
 \arguments{

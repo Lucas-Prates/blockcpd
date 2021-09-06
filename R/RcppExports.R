@@ -9,6 +9,10 @@ compute_hierseg_cpp <- function(suff_stats, family, ncol, pen_func) {
     .Call(`_blockcpd_compute_hierseg_cpp`, suff_stats, family, ncol, pen_func)
 }
 
+compute_suff_stats_cpp <- function(data_mat, family) {
+    .Call(`_blockcpd_compute_suff_stats_cpp`, data_mat, family)
+}
+
 #' @title
 #' Rand Index Function for change point detection
 #'
@@ -61,5 +65,10 @@ compute_symdiff <- function(cp1, cp2) {
 #' @param cp2 Change point set for model 2 or true change point set.
 compute_jaccard <- function(cp1, cp2) {
     .Call(`_blockcpd_compute_jaccard`, cp1, cp2)
+}
+
+#' Sampler for depedent models
+rcpd_cpp <- function(family, n, m, changepoints, parameters) {
+    .Call(`_blockcpd_rcpd_cpp`, family, n, m, changepoints, parameters)
 }
 

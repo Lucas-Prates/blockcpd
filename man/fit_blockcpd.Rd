@@ -10,7 +10,7 @@ fit_blockcpd(
   family = "bernoulli",
   lambda = 1,
   select_lambda = FALSE,
-  pen_func = bic_loss_hs,
+  pen_func = bic_loss,
   max_blocks = NULL,
   bootstrap = FALSE,
   bootstrap_rep = 100L,
@@ -31,11 +31,31 @@ known as binary segmentation;
 \item[\link[=compute_dynseg]{dynseg}] Dynamical programming segmentation.
 }}
 
-\item{family}{The name of the family to detect changes in parameters. The
-families  currently implemented are: "normal", "bernoulli". If "normal" is
-chosen, the algorithm will estimate blocks with different mean or variance.
-If bernoulli is chosen, it will estimate blocks that differ by the
-probability parameter.}
+\item{family}{The name of the family to detect changes in parameters. Should
+be passed as a string. The families  currently implemented are:
+
+\itemize{
+\item{"bernoulli"} The model assumes that data comes from a Bernoulli
+distribution. For each block, the algorithm estimates the probability
+paramater. Each entry should be binary.
+\item{"normal"} The model assumes data comes fro ma Normal distribution with
+unknown mean and variance. For each block, the algorithms estimates the
+mean and variance parameter. Each entry should be numeric.
+\item{"binaryMarkov"} The model assumes that data comes from two states (0, 1)
+Markov Chain. For each block, the algorithm estimates the 2x2 transition
+matrix. Each entry should be binary. At the boundary of the blocks, the
+transition is defined using the parameters of the next (new) block. For
+instance, consider a block defined from a to c, followed a block from c + 1
+to b (including the extremes). By definition, c is a change point, and the
+transition from X_c to X_{c} + 1 is defined by the parameters on c + 1 to
+b.
+\item{"exponential"} The model assumes that data comes from an Exponential
+distribution. For each block, the algorithm estimates the scale parameter,
+that is, the inverse of the rate. Each entry should be numeric and positive.
+\item{"poisson"} The model assumes that data comes from a Poisson distribution
+For each block, the algorithm estimates the rate paramater. Each entry
+should an positive integer.
+}}
 
 \item{lambda}{The penalization constant. A list of penalization constant can
 be passed if the argument "select_lambda" is TRUE.}
@@ -62,18 +82,19 @@ respect to the final change point set estimated.}
 \value{
 The function returns a S3 object of the type blockcpd.
 \itemize{
-\item\link{changepoints} a list containing the set of estimated change points;
-\item\link{probabilities} a list containing the estimated probability parameters
-for each block;
-\item\link{loss} the final loss evaluated on the entire data set for the
+\item{"changepoints"} a list containing the set of estimated change points;
+\item{"parameters"} a list containing the estimated parameters for each
+block. In the case of multiple parameters, it provides a list of lists,
+where each sub list refers to the parameter that names the list;
+\item{"loss"} the final loss evaluated on the entire data set for the
 returned model;
-\item\link{neg_loglike} The negative log likelihood of the model;
-\item\link{n_cp} number of change points estimated;
-\item\link{metadata} Arguments passed to fit the model;
-\item\link{bootstrap_info} if bootstrap argument is true, this contains a list
+\item{"neg_loglike"} The negative log likelihood of the model;
+\item{"n_cp"} number of change points estimated;
+\item{"metadata"} Arguments passed to fit the model;
+\item{"bootstrap_info"} if bootstrap argument is true, this contains a list
 of the metrics for each bootstrap sample, and contains the estimated
 probability of each index being detected as a change point;
-\item\link{lambda_info} If select_lambda argument is true, this contains a list
+\item{"lambda_info"} If select_lambda argument is true, this contains a list
 summarizing the the BIC values and the best value for lambda.
 }
 }
