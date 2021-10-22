@@ -6,6 +6,11 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // compute_dynseg_cpp
 List compute_dynseg_cpp(const List& suff_stats, const String& family, const int& ncol, int max_blocks, const Function& pen_func);
 RcppExport SEXP _blockcpd_compute_dynseg_cpp(SEXP suff_statsSEXP, SEXP familySEXP, SEXP ncolSEXP, SEXP max_blocksSEXP, SEXP pen_funcSEXP) {
