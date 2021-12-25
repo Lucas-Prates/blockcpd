@@ -66,13 +66,11 @@
 #'  \item{"loss"} the final loss evaluated on the entire data set for the
 #'  returned model;
 #'  \item{"neg_loglike"} The negative log likelihood of the model;
-#'  \item{"n_cp"} number of change points estimated;
+#'  \item{"ncp"} number of change points estimated;
 #'  \item{"metadata"} Arguments passed to fit the model;
 #'  \item{"bootstrap_info"} if bootstrap argument is true, this contains a list
 #'  of the metrics for each bootstrap sample, and contains the estimated
 #'  probability of each index being detected as a change point;
-#'  \item{"lambda_info"} If select_lambda argument is true, this contains a list
-#'  summarizing the the BIC values and the best value for lambda.
 #' }
 #' @export
 fit_blockcpd = function(data_matrix,
@@ -88,9 +86,9 @@ fit_blockcpd = function(data_matrix,
 
   check_input(method, family, lambda)
 
-  n = nrow(data_matrix)
-  m = ncol(data_matrix)
-  if(is.null(max_blocks)){max_blocks = m}
+  nrow = nrow(data_matrix)
+  ncol = ncol(data_matrix)
+  if(is.null(max_blocks)){max_blocks = ncol}
 
   methodcall_name = paste0("compute_", method) # method name in package
   suff_stats = compute_suff_stats(data_matrix, family)
@@ -98,8 +96,8 @@ fit_blockcpd = function(data_matrix,
   # Fits model for the given lambda
   fit_arguments   = list(suff_stats = suff_stats,
                          family = family,
-                         n = n,
-                         m = m,
+                         nrow = nrow,
+                         ncol = ncol,
                          lambda = lambda,
                          pen_func = pen_func,
                          max_blocks = max_blocks)
@@ -111,7 +109,7 @@ fit_blockcpd = function(data_matrix,
   # Bootstrap computation
   # ??? Separate this in a new function ???
   if(bootstrap){
-    cp_freq = rep(0, m) # Frequency of an index being detected as a change point
+    cp_freq = rep(0, ncol) # Frequency of an index being detected as a change point
     haus_boot = rep(0, bootstrap_rep)
     symdiff_boot = rep(0, bootstrap_rep)
     rand_boot = rep(0, bootstrap_rep)
@@ -119,12 +117,12 @@ fit_blockcpd = function(data_matrix,
     ncp_boot = rep(0, bootstrap_rep)
 
     for(i in 1:bootstrap_rep){
-      boot_samp = sample(n, n, replace = TRUE)
+      boot_samp = sample(nrow, nrow, replace = TRUE)
       suff_stats_boot = compute_suff_stats(data_matrix[boot_samp, ], family)
       fit_arguments_boot = list(suff_stats = suff_stats_boot,
                                 family = family,
-                                n = n,
-                                m = m,
+                                nrow = nrow,
+                                ncol = ncol,
                                 lambda = lambda,
                                 pen_func = pen_func,
                                 max_blocks = max_blocks)
@@ -138,7 +136,7 @@ fit_blockcpd = function(data_matrix,
       symdiff_boot[i] = compute_symdiff(model$changepoints,
                                         model_boot$changepoints)
       rand_boot[i] = compute_rand(model$changepoints,
-                                  model_boot$changepoints, m)
+                                  model_boot$changepoints, ncol)
       jaccard_boot[i] = compute_jaccard(model$changepoints,
                                         model_boot$changepoints)
       ncp_boot[i] = length(model_boot$changepoints)
@@ -161,8 +159,8 @@ fit_blockcpd = function(data_matrix,
   # Wrap results in a S3 class called blockcpd
   model$metadata = list(method = method,
                         family = family,
-                        n = n,
-                        m = m,
+                        nrow = nrow,
+                        ncol = ncol,
                         bootstrap = bootstrap,
                         lambda = lambda,
                         pen_func = pen_func,
