@@ -43,11 +43,8 @@
 #'  should an positive integer.
 #' }
 #'
-#' @param lambda The penalization constant. A list of penalization constant can
-#' be passed if the argument "select_lambda" is TRUE.
-#' @param select_lambda A flag to decide if the BIC criterion must be used to
-#' choose the best lambda from the list of values provided in the "lambda"
-#' argument.
+#' @param lambda The penalization constant. Must be a unique non-negative
+#' numeric value.
 #' @param pen_func Regularization function used for fitting, with default as the
 #' BIC. For user specified functions, check the template in the
 #' \link[=toy_regularization]{regularization} regularization.rd file.
@@ -81,28 +78,15 @@
 fit_blockcpd = function(data_matrix,
                         method = "hierseg",
                         family = "bernoulli",
-                        lambda = 1,
-                        select_lambda = FALSE,
+                        lambda = 1.0,
                         pen_func = bic_loss,
                         max_blocks = NULL,
                         bootstrap = FALSE,
                         bootstrap_rep = 100L,
                         bootstrap_progress = FALSE) {
 
-  ### Check inputs
-  IMPLEMENTED_METHODS = c("hierseg", "dynseg")
 
-  IMPLEMENTED_FAMILIES = c("normal", "bernoulli", "binaryMarkov",
-                           "exponential", "poisson")
-
-  if ( !(method %in% IMPLEMENTED_METHODS) ) {
-    stop("Error! The 'method' argument provided is not implemented!")
-  }
-
-  if ( !(family %in% IMPLEMENTED_FAMILIES) ) {
-    stop("Error! The 'family' argument provided is not implemented!")
-  }
-  ###
+  check_input(method, family, lambda)
 
   n = nrow(data_matrix)
   m = ncol(data_matrix)
@@ -111,51 +95,20 @@ fit_blockcpd = function(data_matrix,
   methodcall_name = paste0("compute_", method) # method name in package
   suff_stats = compute_suff_stats(data_matrix, family)
 
-  # Fits a model for each lambda and chooses the best using the BIC criterion
-  if(select_lambda){
-    bic_value = rep(0, length(lambda))
-    best_bic = Inf
-    best_i = lambda[1]
-    for(i in 1:length(lambda)){
-      lambda_i = lambda[i]
-      fit_arguments = list(suff_stats = suff_stats,
-                           family = family,
-                           n = n,
-                           m = m,
-                           lambda = lambda_i,
-                           pen_func = pen_func,
-                           max_blocks = max_blocks)
+  # Fits model for the given lambda
+  fit_arguments   = list(suff_stats = suff_stats,
+                         family = family,
+                         n = n,
+                         m = m,
+                         lambda = lambda,
+                         pen_func = pen_func,
+                         max_blocks = max_blocks)
 
-      model_lambda = do.call(methodcall_name, fit_arguments)
-      n_param = model_lambda$n_cp + 1
-      bic_value[i] = 2*model_lambda$neg_loglike + log(n)*n_param
-      # Avoid recomputation of the model
-      if(bic_value[i] < best_bic){
-        model = model_lambda
-        best_lambda = lambda[i]
-        best_bic = bic_value[i]
-      }
-    }
-  }
-  else{
-    # Fits model for the unique given lambda
-    # If a list of lambdas is passed, only the first value is considered
-    best_lambda = lambda # for bootstrap argument consistency
-    fit_arguments   = list(suff_stats = suff_stats,
-                           family = family,
-                           n = n,
-                           m = m,
-                           lambda = lambda,
-                           pen_func = pen_func,
-                           max_blocks = max_blocks)
-
-    model = do.call(methodcall_name, fit_arguments)
-  }
+  model = do.call(methodcall_name, fit_arguments)
 
 
   ### ------------------------------------------------- ###
   # Bootstrap computation
-  # Notice that best_lambda is used in the bootstrap computations
   # ??? Separate this in a new function ???
   if(bootstrap){
     cp_freq = rep(0, m) # Frequency of an index being detected as a change point
@@ -172,7 +125,7 @@ fit_blockcpd = function(data_matrix,
                                 family = family,
                                 n = n,
                                 m = m,
-                                lambda = best_lambda,
+                                lambda = lambda,
                                 pen_func = pen_func,
                                 max_blocks = max_blocks)
       model_boot = do.call(methodcall_name, fit_arguments_boot)
@@ -214,11 +167,6 @@ fit_blockcpd = function(data_matrix,
                         lambda = lambda,
                         pen_func = pen_func,
                         max_blocks = max_blocks)
-  if(select_lambda){
-    model$lambda_info = list(lambda = lambda,
-                             bic_value = bic_value,
-                             best_lambda = best_lambda)
-  }
   class(model) = "blockcpd"
 
   return(model)
