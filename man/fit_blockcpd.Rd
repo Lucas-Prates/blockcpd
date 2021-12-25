@@ -9,7 +9,6 @@ fit_blockcpd(
   method = "hierseg",
   family = "bernoulli",
   lambda = 1,
-  select_lambda = FALSE,
   pen_func = bic_loss,
   max_blocks = NULL,
   bootstrap = FALSE,
@@ -57,12 +56,8 @@ For each block, the algorithm estimates the rate paramater. Each entry
 should an positive integer.
 }}
 
-\item{lambda}{The penalization constant. A list of penalization constant can
-be passed if the argument "select_lambda" is TRUE.}
-
-\item{select_lambda}{A flag to decide if the BIC criterion must be used to
-choose the best lambda from the list of values provided in the "lambda"
-argument.}
+\item{lambda}{The penalization constant. Must be a unique non-negative
+numeric value.}
 
 \item{pen_func}{Regularization function used for fitting, with default as the
 BIC. For user specified functions, check the template in the
@@ -89,13 +84,11 @@ where each sub list refers to the parameter that names the list;
 \item{"loss"} the final loss evaluated on the entire data set for the
 returned model;
 \item{"neg_loglike"} The negative log likelihood of the model;
-\item{"n_cp"} number of change points estimated;
+\item{"ncp"} number of change points estimated;
 \item{"metadata"} Arguments passed to fit the model;
 \item{"bootstrap_info"} if bootstrap argument is true, this contains a list
 of the metrics for each bootstrap sample, and contains the estimated
 probability of each index being detected as a change point;
-\item{"lambda_info"} If select_lambda argument is true, this contains a list
-summarizing the the BIC values and the best value for lambda.
 }
 }
 \description{

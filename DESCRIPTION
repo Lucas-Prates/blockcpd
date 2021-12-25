@@ -13,7 +13,7 @@ Authors@R:
            email = "florencia@usp.br",
            comment = c(ORCID = "0000-0002-0299-0680"))
     )
-Description:  The blockcpd package implements statistical models based on 
+Description: The blockcpd package implements statistical models based on 
     regularized likelihood to perform offline change point detection when working
     with multiple indepedent time series. It detects changes in parameters for the
     specified family, so in a sense it detects "blocks of random variables" which
@@ -22,7 +22,7 @@ License: GPL (>= 2)
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 Imports: 
     Rcpp
 LinkingTo: 
