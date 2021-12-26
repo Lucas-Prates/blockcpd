@@ -11,6 +11,9 @@
 \item[\link[=fit_blockcpd]{fit_blockcpd}] function.}
 
 \item{parameter}{The parameter of the family for which to plot the blocked}
+
+\item{library}{Graphical library to be used for plotting. Current values are
+"base".}
 }
 \description{
 Plots the selected parameters in a blocked fashion.
