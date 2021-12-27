@@ -13,7 +13,8 @@ fit_blockcpd(
   max_blocks = NULL,
   bootstrap = FALSE,
   bootstrap_rep = 100L,
-  bootstrap_progress = FALSE
+  bootstrap_progress = FALSE,
+  skip_input_check = FALSE
 )
 }
 \arguments{
@@ -71,6 +72,8 @@ the "method" argument.}
 estimation of the probability of each index being detected as a change point.
 It also provides a sample of all the metrics implemented computed with
 respect to the final change point set estimated.}
+
+\item{skip_input_check}{Flag indicating if input checking should be skipped.}
 
 \item{boostrap_rep}{Number of bootstrap repetitions.}
 }

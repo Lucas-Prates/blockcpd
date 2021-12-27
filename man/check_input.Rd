@@ -2,11 +2,12 @@
 % Please edit documentation in R/check_input.R
 \name{check_input}
 \alias{check_input}
-\title{Checks input from fit_blockcpd}
+\title{Checks input from caller}
 \usage{
-check_input(method, family, lambda)
+check_input(caller, args_to_check)
 }
 \description{
-Checks if the input from \item[\link[=fit_blockcpd]{fit_blockcpd}] passes
-a sanity check.
+Performs a sanity check on the inputs from caller. It stops execution and
+outputs an error message if arguments are not in conformity with caller
+method.
 }

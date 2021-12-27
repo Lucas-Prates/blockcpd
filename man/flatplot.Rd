@@ -10,7 +10,7 @@ flatplot(
   lambda_right = 10,
   step = 0.5,
   blockcpd_args = list(),
-  library = "base"
+  pkg = "base"
 )
 }
 \arguments{
@@ -29,7 +29,7 @@ greater than lambda_left.}
 arguments names. It must \emph{not} contain the argument 'lambda' or
 'data_matrix'.}
 
-\item{library}{Graphical library to be used for plotting. Current values are
+\item{pkg}{Graphical package to be used for plotting. Current values are
 "base".}
 }
 \value{

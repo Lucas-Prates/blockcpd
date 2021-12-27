@@ -57,11 +57,17 @@ rcpd = function(nrow = 100,
   # Setup variables if NULL or check for input errors if the user specified the
   # arguments
   #---------
+  IMPLEMENTED_FAMILIES = c("normal", "bernoulli", "binaryMarkov",
+                           "exponential", "poisson")
+
+  args_to_check = list(ncp = ncp, ncol = ncol, nrow = nrow,
+                       changepoints = changepoints,
+                       family = family,
+                       IMPLEMENTED_FAMILIES = IMPLEMENTED_FAMILIES)
+  do.call(check_input, list(caller = as.character(match.call()[[1]]),
+                            args_to_check = args_to_check))
+
   if (is.null(changepoints)) {
-    if ((ncp >= ncol)||(ncp < 0)){
-      stop(paste0("Input error! The number of change points ncp must be between ",
-                  "0 and ncol-1."))
-    }
     if(family == "binaryMarkov"){
       ncp = min(ncp, floor(ncol/2))
       changepoints = sort(c(0, sample(2:(ncol-2), ncp, replace = FALSE), ncol))
@@ -77,26 +83,14 @@ rcpd = function(nrow = 100,
   # Check if the change point vector provided is valid
   # and append auxiliary change points
   else {
-
-    if ((any(changepoints <= 0)) || (any(changepoints >= ncol))) {
-      stop("Input error! Change point vector entries must vary from 1 to ncol-1.")
-    }
-
     ncp = length(changepoints)
     # Auxiliary change points for sampling
     changepoints = c(0, sort(changepoints), ncol)
-
   }
 
 
   #---------
-  IMPLEMENTED_FAMILIES = c("normal", "bernoulli", "binaryMarkov",
-                           "exponential", "poisson")
 
-  if (!(family %in% IMPLEMENTED_FAMILIES)){
-    stop(paste0("Input error! The argument 'family' provided is not
-                 the list of possible families."))
-  }
   if(family == "bernoulli"){
     if (is.null(parameters)) {
       parameters = list(prob = stats::runif(ncp + 1))

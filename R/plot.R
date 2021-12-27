@@ -17,9 +17,12 @@ plot.blockcpd = function(blockcpd_obj, parameter = NULL,
   if(is.null(parameter)){
     parameter = names(blockcpd_obj$parameters)[1]
   }
-  if(!(parameter %in% names(blockcpd_obj$parameters))){
-    stop("Input error! The 'parameter' argument is not a parameter of the family fitted for the blockcpd object!")
-  }
+
+  args_to_check = list(parameter = parameter,
+                       family_parameters = names(blockcpd_obj$parameters))
+  do.call(check_input, list(caller = as.character(match.call()[[1]]),
+                            args_to_check = args_to_check))
+
   ncol = blockcpd_obj$metadata$ncol
   ncp = blockcpd_obj$ncp
   changepoints = blockcpd_obj$changepoints
@@ -64,28 +67,23 @@ plot.blockcpd = function(blockcpd_obj, parameter = NULL,
 #' @export
 flatplot = function(data_matrix, lambda_left = 0, lambda_right = 10, step = 0.5,
                     blockcpd_args = list(), pkg = "base"){
-  # checks if blockcpd_args is a list
-  if(!is.list(blockcpd_args)){
-    stop("Input error! The 'blockcpd_args' argument must be a list!")
-  }
-  # check if lambda is not in argument list
-  if(("lambda" %in% names(blockcpd_args))||("data_matrix" %in% names(blockcpd_args))){
-    stop("Input error! The 'blockcpd_args' argument must not contain the 'lambda' or 'data_matrix' as a key!")
-  }
-  # sanity check on lambda_left, lambda_right
-  if((lambda_left >= lambda_right)||(lambda_left < 0)){
-    stop("Input error! We must have 0 < 'lambda_left' < 'lambda_right'!")
-  }
-  # sanity check on step
-  if(step <= 0){
-    stop("Input error! We must have 'step' > 0")
-  }
+
+  # check input
+  args_to_check = list(blockcpd_args = blockcpd_args,
+                       lambda_left = lambda_left,
+                       lambda_right = lambda_right,
+                       step = step)
+  do.call(check_input, list(caller = as.character(match.call()[[1]]),
+                            args_to_check = args_to_check))
+
+
   lambda_set = seq(lambda_left, lambda_right, step)
   lambda_set_len = length(lambda_set)
   ncp = numeric(lambda_set_len)
   neg_loglike = numeric(lambda_set_len)
   call_arg = c(list(data_matrix = data_matrix, lambda = lambda_set[1]),
                blockcpd_args)
+  call_arg$skip_input_check = TRUE # skips input to avoid error
   for(i in 1:lambda_set_len){
     call_arg$lambda = lambda_set[i]
     model = do.call(fit_blockcpd, call_arg)
@@ -101,5 +99,5 @@ flatplot = function(data_matrix, lambda_left = 0, lambda_right = 10, step = 0.5,
   flatplot_info = list(lambda = lambda_set, ncp = ncp,
                        neg_loglike = neg_loglike)
 
-  return(flatplot_info)
+  invisible(flatplot_info)
 }

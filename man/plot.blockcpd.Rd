@@ -4,7 +4,7 @@
 \alias{plot.blockcpd}
 \title{Plot for blockcpd object}
 \usage{
-\method{plot}{blockcpd}(blockcpd_obj, parameter = NULL, library = "base")
+\method{plot}{blockcpd}(blockcpd_obj, parameter = NULL, pkg = "base")
 }
 \arguments{
 \item{blockcpd_obj}{A fitted blockcpd S3 object provided by the
@@ -12,7 +12,7 @@
 
 \item{parameter}{The parameter of the family for which to plot the blocked}
 
-\item{library}{Graphical library to be used for plotting. Current values are
+\item{pkg}{Graphical package to be used for plotting. Current values are
 "base".}
 }
 \description{

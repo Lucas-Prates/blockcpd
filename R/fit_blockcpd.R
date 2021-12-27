@@ -56,6 +56,7 @@
 #' It also provides a sample of all the metrics implemented computed with
 #' respect to the final change point set estimated.
 #' @param boostrap_rep Number of bootstrap repetitions.
+#' @param skip_input_check Flag indicating if input checking should be skipped.
 #'
 #' @return The function returns a S3 object of the type blockcpd.
 #' \itemize{
@@ -81,11 +82,16 @@ fit_blockcpd = function(data_matrix,
                         max_blocks = NULL,
                         bootstrap = FALSE,
                         bootstrap_rep = 100L,
-                        bootstrap_progress = FALSE) {
-
-
-  check_input(method, family, lambda)
-
+                        bootstrap_progress = FALSE,
+                        skip_input_check = FALSE) {
+  # input check
+  if(!skip_input_check){
+    args_to_check = list(method = method,
+                         family = family,
+                         lambda = lambda)
+    do.call(check_input, list(caller = as.character(match.call()[[1]]),
+                              args_to_check = args_to_check))
+  }
   nrow = nrow(data_matrix)
   ncol = ncol(data_matrix)
   if(is.null(max_blocks)){max_blocks = ncol}
@@ -103,7 +109,6 @@ fit_blockcpd = function(data_matrix,
                          max_blocks = max_blocks)
 
   model = do.call(methodcall_name, fit_arguments)
-
 
   ### ------------------------------------------------- ###
   # Bootstrap computation
