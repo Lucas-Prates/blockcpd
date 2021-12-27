@@ -5,7 +5,7 @@
 #' Plots the selected parameters in a blocked fashion.
 #'
 #' @param blockcpd_obj A fitted blockcpd S3 object provided by the
-#' \item[\link[=fit_blockcpd]{fit_blockcpd}] function.
+#' \link[=fit_blockcpd]{fit_blockcpd} function.
 #' @param parameter The parameter of the family for which to plot the blocked
 #' @param pkg Graphical package to be used for plotting. Current values are
 #' "base".
@@ -45,7 +45,7 @@ plot.blockcpd = function(blockcpd_obj, parameter = NULL,
 #' "First Long Flat Interval" heuristics to choose a constant value.
 #' It is similar to the Elbow method used in clustering. The values of the
 #' constant range from 'lambda_left' to 'lambda_right', increasing by 'step'.
-#' For each value, the function \item[\link[=fit_blockcpd]{fit_blockcpd}] is run
+#' For each value, the function \link[=fit_blockcpd]{fit_blockcpd} is run
 #' with arguments 'blockcpd_args'.
 #'
 #' @param data_matrix Data frame or matrix containing the data set to be
@@ -55,7 +55,7 @@ plot.blockcpd = function(blockcpd_obj, parameter = NULL,
 #' greater than lambda_left.
 #' @param step Value by which lambda will be increased. Must be greater than 0.
 #' @param blockcpd_args A list with argument values for the
-#' \item[\link[=fit_blockcpd]{fit_blockcpd}] function. The list keys must be the
+#' \link[=fit_blockcpd]{fit_blockcpd} function. The list keys must be the
 #' arguments names. It must *not* contain the argument 'lambda' or
 #' 'data_matrix'.
 #' @param pkg Graphical package to be used for plotting. Current values are
