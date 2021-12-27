@@ -7,12 +7,12 @@
 #' @param blockcpd_obj A fitted blockcpd S3 object provided by the
 #' \item[\link[=fit_blockcpd]{fit_blockcpd}] function.
 #' @param parameter The parameter of the family for which to plot the blocked
-#' @param library Graphical library to be used for plotting. Current values are
+#' @param pkg Graphical package to be used for plotting. Current values are
 #' "base".
 #'
 #' @export
 plot.blockcpd = function(blockcpd_obj, parameter = NULL,
-                         library = "base"){
+                         pkg = "base"){
   # check if parameter argument is in family parameter list
   if(is.null(parameter)){
     parameter = names(blockcpd_obj$parameters)[1]
@@ -24,7 +24,7 @@ plot.blockcpd = function(blockcpd_obj, parameter = NULL,
   ncp = blockcpd_obj$ncp
   changepoints = blockcpd_obj$changepoints
   parameter_vec = blockcpd_obj$parameters[[parameter]]
-  if(library == "base"){
+  if(pkg == "base"){
     sf = stepfun(changepoints, parameter_vec)
     plot(sf, xlim = c(1, ncol), do.points = F, xaxs = "i",
          xlab = "Index", ylab = parameter,
@@ -55,7 +55,7 @@ plot.blockcpd = function(blockcpd_obj, parameter = NULL,
 #' \item[\link[=fit_blockcpd]{fit_blockcpd}] function. The list keys must be the
 #' arguments names. It must *not* contain the argument 'lambda' or
 #' 'data_matrix'.
-#' @param library Graphical library to be used for plotting. Current values are
+#' @param pkg Graphical package to be used for plotting. Current values are
 #' "base".
 #'
 #' @return Along with the plot, it returns a list containing the lambda values,
@@ -63,7 +63,7 @@ plot.blockcpd = function(blockcpd_obj, parameter = NULL,
 #' and the blockcpd_args.
 #' @export
 flatplot = function(data_matrix, lambda_left = 0, lambda_right = 10, step = 0.5,
-                    blockcpd_args = list(), library = "base"){
+                    blockcpd_args = list(), pkg = "base"){
   # checks if blockcpd_args is a list
   if(!is.list(blockcpd_args)){
     stop("Input error! The 'blockcpd_args' argument must be a list!")
@@ -92,7 +92,7 @@ flatplot = function(data_matrix, lambda_left = 0, lambda_right = 10, step = 0.5,
     ncp[i] = model$ncp
     neg_loglike[i] = model$neg_loglike
   }
-  if(library == "base"){
+  if(pkg == "base"){
     plot(lambda_set, ncp,
          xlab = "lambda", ylab = "Number of change points",
          main = "Flatplot - number of change points per regularization constant value")
