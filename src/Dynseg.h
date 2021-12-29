@@ -19,7 +19,7 @@ public:
   TriangularMatrix<double> loss_mat;
 
   Dynseg(String family, const List& suff_stats, Function pen_func,
-         int ncol, int max_blocks);
+         int ncol, int min_block_size, int max_blocks);
 
   // Wrapper for fitting methods. First, it calls a method to fit the change
   // point set. Then, it calls fit_family_parameters.

@@ -11,6 +11,7 @@ compute_hierseg(
   nrow,
   ncol,
   pen_func = bic_loss,
+  min_block_size = min_block_size,
   max_blocks = NULL
 )
 }
@@ -29,6 +30,9 @@ compute_hierseg(
 The function signature should be pen(left_index, right_index, nrow, ncol),
 where the left_index:right_index is the integer interval, nrow the sample
 size and ncol the number of variables/columns.}
+
+\item{min_block_size}{Minimum block size allowed. Default is 0, and the value
+must be smaller or equal to ncol.}
 }
 \description{
 Uses binary splitting to obtain a greedy soltuion to the regularized loss

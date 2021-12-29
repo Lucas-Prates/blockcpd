@@ -2,8 +2,9 @@
 #include "Hierseg.h"
 using namespace Rcpp;
 
-Hierseg::Hierseg(String family, const List& suff_stats, Function pen_func, int ncol)
-  : Blockcpd(family, suff_stats, pen_func, ncol) {}
+Hierseg::Hierseg(String family, const List& suff_stats, Function pen_func,
+                 int ncol, int min_block_size)
+  : Blockcpd(family, suff_stats, pen_func, ncol, min_block_size) {}
 
 
 void Hierseg::fit_hierseg(){

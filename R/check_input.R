@@ -12,8 +12,9 @@ check_input = function(caller, args_to_check){
   if(caller == "fit_blockcpd"){
     method = args_to_check$method
     family = args_to_check$family
+    ncol = args_to_check$ncol
+    min_block_size = args_to_check$min_block_size
     lambda = args_to_check$lambda
-
     IMPLEMENTED_METHODS = c("hierseg", "dynseg")
 
     IMPLEMENTED_FAMILIES = c("normal", "bernoulli", "binaryMarkov",
@@ -29,6 +30,9 @@ check_input = function(caller, args_to_check){
 
     if((!is.numeric(lambda))||(length(lambda) != 1)){
       stop("Input error! The 'lambda' argument must be a unique numeric value!")
+    }
+    if(min_block_size > ncol){
+      stop("Input error! The 'min_block_size' argumenst must be smaller than ncol+1")
     }
     if (lambda < 0){
       stop("Input error! The 'lambda' argument must be non-negative!")

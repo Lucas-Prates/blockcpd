@@ -11,10 +11,11 @@ using namespace Rcpp;
 List compute_dynseg_cpp(const List& suff_stats,
                         const String& family,
                         const int& ncol,
+                        const int& min_block_size,
                         int max_blocks,
                         const Function& pen_func){
 
-  Dynseg dynseg(family, suff_stats, pen_func, ncol, max_blocks);
+  Dynseg dynseg(family, suff_stats, pen_func, ncol, min_block_size, max_blocks);
   dynseg.fit_dynseg();
   List model_info(5);
   model_info[0] = dynseg.changepoints;

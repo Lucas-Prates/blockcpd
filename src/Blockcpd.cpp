@@ -2,13 +2,16 @@
 #include "Blockcpd.h"
 using namespace Rcpp;
 
-Blockcpd::Blockcpd(String family, const List& suff_stats, Function pen_func, int ncol)
+Blockcpd::Blockcpd(String family, const List& suff_stats, Function pen_func,
+                   int ncol, int min_block_size)
   : family(family),  suff_stats(suff_stats), pen_func(pen_func), ncol(ncol),
-    changepoints(0), loss(0), negloglike(0) {}
+    min_block_size(min_block_size), changepoints(0), loss(0), negloglike(0) {}
 
 float Blockcpd::compute_negloglike(const int& left_index,
                                    const int& right_index){
-
+  if(right_index - left_index < min_block_size){
+    return INFINITY; //-loglike = -inf to force min_blocK_size restriction
+  }
   double loglike = 0;
   int block_size = 0;
 
@@ -56,7 +59,7 @@ float Blockcpd::compute_negloglike(const int& left_index,
 
   if(family == "binaryMarkov"){
     if(right_index == left_index){
-      loglike = -INFINITY;
+      return(INFINITY); // force model not to allow 1 sized blocks
     }
     else{
       NumericVector col_samples0 = suff_stats[0];

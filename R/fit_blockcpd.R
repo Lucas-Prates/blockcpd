@@ -48,6 +48,8 @@
 #' @param pen_func Regularization function used for fitting, with default as the
 #' BIC. For user specified functions, check the template in the
 #' \link[=toy_regularization]{regularization} regularization.rd file.
+#' @param min_block_size Minimum block size allowed. Default is 0, and the value
+#' must be smaller or equal to ncol.
 #' @param max_blocks An integer greater than 0 that specify the maximum number
 #' of blocks fitted by the algorithm. It is only used if dynseg is specified in
 #' the "method" argument.
@@ -79,21 +81,25 @@ fit_blockcpd = function(data_matrix,
                         family = "bernoulli",
                         lambda = 1.0,
                         pen_func = bic_loss,
+                        min_block_size = 0L,
                         max_blocks = NULL,
                         bootstrap = FALSE,
                         bootstrap_rep = 100L,
                         bootstrap_progress = FALSE,
                         skip_input_check = FALSE) {
+
+  nrow = nrow(data_matrix)
+  ncol = ncol(data_matrix)
   # input check
   if(!skip_input_check){
     args_to_check = list(method = method,
                          family = family,
+                         ncol = ncol,
+                         min_block_size = min_block_size,
                          lambda = lambda)
     do.call(check_input, list(caller = as.character(match.call()[[1]]),
                               args_to_check = args_to_check))
   }
-  nrow = nrow(data_matrix)
-  ncol = ncol(data_matrix)
   if(is.null(max_blocks)){max_blocks = ncol}
 
   methodcall_name = paste0("compute_", method) # method name in package
@@ -106,6 +112,7 @@ fit_blockcpd = function(data_matrix,
                          ncol = ncol,
                          lambda = lambda,
                          pen_func = pen_func,
+                         min_block_size = min_block_size,
                          max_blocks = max_blocks)
 
   model = do.call(methodcall_name, fit_arguments)
@@ -130,6 +137,7 @@ fit_blockcpd = function(data_matrix,
                                 ncol = ncol,
                                 lambda = lambda,
                                 pen_func = pen_func,
+                                min_block_size = min_block_size,
                                 max_blocks = max_blocks)
       model_boot = do.call(methodcall_name, fit_arguments_boot)
       # For each index (column) detected as change point, increment it
@@ -169,6 +177,7 @@ fit_blockcpd = function(data_matrix,
                         bootstrap = bootstrap,
                         lambda = lambda,
                         pen_func = pen_func,
+                        min_block_size = min_block_size,
                         max_blocks = max_blocks)
   class(model) = "blockcpd"
 

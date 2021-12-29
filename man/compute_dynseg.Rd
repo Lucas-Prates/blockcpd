@@ -10,6 +10,7 @@ compute_dynseg(
   lambda = 1,
   nrow,
   ncol,
+  min_block_size = min_block_size,
   max_blocks = ncol - 1,
   pen_func = bic_loss
 )
@@ -24,6 +25,9 @@ compute_dynseg(
 \item{nrow}{Number of rows or samples}
 
 \item{ncol}{Number of columns or variables}
+
+\item{min_block_size}{Minimum block size allowed. Default is 0, and the value
+must be smaller or equal to ncol.}
 
 \item{max_blocks}{Threshold on the number of block segments to fit the model.
 Set low values for this parameters if having performance issues on large

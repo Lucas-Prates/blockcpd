@@ -15,12 +15,15 @@
 #'   The function signature should be pen(left_index, right_index, nrow, ncol),
 #'   where the left_index:right_index is the integer interval, nrow the sample
 #'   size and ncol the number of variables/columns.
+#' @param min_block_size Minimum block size allowed. Default is 0, and the value
+#' must be smaller or equal to ncol.
 compute_hierseg = function(suff_stats,
                            family,
                            lambda = 1,
                            nrow,
                            ncol,
                            pen_func = bic_loss,
+                           min_block_size = min_block_size,
                            max_blocks = NULL) {
 
   # max_blocks is not used in this function
@@ -33,7 +36,8 @@ compute_hierseg = function(suff_stats,
   hs_output = compute_hierseg_cpp(suff_stats = suff_stats,
                                   family = family,
                                   ncol = ncol,
-                                  hs_pen_function)
+                                  hs_pen_function,
+                                  min_block_size = min_block_size)
 
   model_info = list(changepoints = hs_output[[1]],
                     parameters = hs_output[[2]],

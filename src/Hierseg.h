@@ -12,7 +12,8 @@ class Hierseg : public Blockcpd
 {
 public:
 
-  Hierseg(String family, const List& suff_stats, Function pen_func, int ncol);
+  Hierseg(String family, const List& suff_stats, Function pen_func,
+          int ncol, int min_block_size);
 
   // Wrapper for fitting methods. First, it calls a method to fit the change
   // point set. Then, it calls fit_family_parameters.

@@ -8,7 +8,7 @@
 }
 \arguments{
 \item{blockcpd_obj}{A fitted blockcpd S3 object provided by the
-\item[\link[=fit_blockcpd]{fit_blockcpd}] function.}
+\link[=fit_blockcpd]{fit_blockcpd} function.}
 
 \item{parameter}{The parameter of the family for which to plot the blocked}
 

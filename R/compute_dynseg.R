@@ -11,6 +11,8 @@
 #' @param lambda Penalization constant
 #' @param nrow Number of rows or samples
 #' @param ncol Number of columns or variables
+#' @param min_block_size Minimum block size allowed. Default is 0, and the value
+#' must be smaller or equal to ncol.
 #' @param max_blocks Threshold on the number of block segments to fit the model.
 #' Set low values for this parameters if having performance issues on large
 #' data sets.
@@ -23,6 +25,7 @@ compute_dynseg = function(suff_stats,
                           lambda = 1,
                           nrow,
                           ncol,
+                          min_block_size = min_block_size,
                           max_blocks = ncol - 1,
                           pen_func = bic_loss){
 
@@ -39,6 +42,7 @@ compute_dynseg = function(suff_stats,
   ds_output = compute_dynseg_cpp(suff_stats = suff_stats,
                                  family = family,
                                  ncol = ncol,
+                                 min_block_size = min_block_size,
                                  max_blocks = max_blocks,
                                  pen_func = ds_pen_function)
 

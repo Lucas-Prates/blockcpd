@@ -12,31 +12,33 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // compute_dynseg_cpp
-List compute_dynseg_cpp(const List& suff_stats, const String& family, const int& ncol, int max_blocks, const Function& pen_func);
-RcppExport SEXP _blockcpd_compute_dynseg_cpp(SEXP suff_statsSEXP, SEXP familySEXP, SEXP ncolSEXP, SEXP max_blocksSEXP, SEXP pen_funcSEXP) {
+List compute_dynseg_cpp(const List& suff_stats, const String& family, const int& ncol, const int& min_block_size, int max_blocks, const Function& pen_func);
+RcppExport SEXP _blockcpd_compute_dynseg_cpp(SEXP suff_statsSEXP, SEXP familySEXP, SEXP ncolSEXP, SEXP min_block_sizeSEXP, SEXP max_blocksSEXP, SEXP pen_funcSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const List& >::type suff_stats(suff_statsSEXP);
     Rcpp::traits::input_parameter< const String& >::type family(familySEXP);
     Rcpp::traits::input_parameter< const int& >::type ncol(ncolSEXP);
+    Rcpp::traits::input_parameter< const int& >::type min_block_size(min_block_sizeSEXP);
     Rcpp::traits::input_parameter< int >::type max_blocks(max_blocksSEXP);
     Rcpp::traits::input_parameter< const Function& >::type pen_func(pen_funcSEXP);
-    rcpp_result_gen = Rcpp::wrap(compute_dynseg_cpp(suff_stats, family, ncol, max_blocks, pen_func));
+    rcpp_result_gen = Rcpp::wrap(compute_dynseg_cpp(suff_stats, family, ncol, min_block_size, max_blocks, pen_func));
     return rcpp_result_gen;
 END_RCPP
 }
 // compute_hierseg_cpp
-List compute_hierseg_cpp(const List& suff_stats, const String& family, const int& ncol, const Function& pen_func);
-RcppExport SEXP _blockcpd_compute_hierseg_cpp(SEXP suff_statsSEXP, SEXP familySEXP, SEXP ncolSEXP, SEXP pen_funcSEXP) {
+List compute_hierseg_cpp(const List& suff_stats, const String& family, const int& ncol, const int& min_block_size, const Function& pen_func);
+RcppExport SEXP _blockcpd_compute_hierseg_cpp(SEXP suff_statsSEXP, SEXP familySEXP, SEXP ncolSEXP, SEXP min_block_sizeSEXP, SEXP pen_funcSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const List& >::type suff_stats(suff_statsSEXP);
     Rcpp::traits::input_parameter< const String& >::type family(familySEXP);
     Rcpp::traits::input_parameter< const int& >::type ncol(ncolSEXP);
+    Rcpp::traits::input_parameter< const int& >::type min_block_size(min_block_sizeSEXP);
     Rcpp::traits::input_parameter< const Function& >::type pen_func(pen_funcSEXP);
-    rcpp_result_gen = Rcpp::wrap(compute_hierseg_cpp(suff_stats, family, ncol, pen_func));
+    rcpp_result_gen = Rcpp::wrap(compute_hierseg_cpp(suff_stats, family, ncol, min_block_size, pen_func));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -118,8 +120,8 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_blockcpd_compute_dynseg_cpp", (DL_FUNC) &_blockcpd_compute_dynseg_cpp, 5},
-    {"_blockcpd_compute_hierseg_cpp", (DL_FUNC) &_blockcpd_compute_hierseg_cpp, 4},
+    {"_blockcpd_compute_dynseg_cpp", (DL_FUNC) &_blockcpd_compute_dynseg_cpp, 6},
+    {"_blockcpd_compute_hierseg_cpp", (DL_FUNC) &_blockcpd_compute_hierseg_cpp, 5},
     {"_blockcpd_compute_suff_stats_cpp", (DL_FUNC) &_blockcpd_compute_suff_stats_cpp, 2},
     {"_blockcpd_compute_rand", (DL_FUNC) &_blockcpd_compute_rand, 3},
     {"_blockcpd_compute_hausdorff", (DL_FUNC) &_blockcpd_compute_hausdorff, 2},

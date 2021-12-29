@@ -25,7 +25,7 @@ greater than lambda_left.}
 \item{step}{Value by which lambda will be increased. Must be greater than 0.}
 
 \item{blockcpd_args}{A list with argument values for the
-\item[\link[=fit_blockcpd]{fit_blockcpd}] function. The list keys must be the
+\link[=fit_blockcpd]{fit_blockcpd} function. The list keys must be the
 arguments names. It must \emph{not} contain the argument 'lambda' or
 'data_matrix'.}
 
@@ -43,6 +43,6 @@ with the regularization constant lambda. The graphic is combined with the
 "First Long Flat Interval" heuristics to choose a constant value.
 It is similar to the Elbow method used in clustering. The values of the
 constant range from 'lambda_left' to 'lambda_right', increasing by 'step'.
-For each value, the function \item[\link[=fit_blockcpd]{fit_blockcpd}] is run
+For each value, the function \link[=fit_blockcpd]{fit_blockcpd} is run
 with arguments 'blockcpd_args'.
 }
