@@ -46,8 +46,17 @@ check_input = function(caller, args_to_check){
   if(caller == "plot.blockcpd"){
     parameter = args_to_check$parameter
     family_parameters = args_to_check$family_parameters
+    is_index_values_numeric = args_to_check$is_index_values_numeric
+    length_index_values = args_to_check$length_index_values
+    ncol = args_to_check$ncol
     if(!(parameter %in% family_parameters)){
       stop("Input error! The 'parameter' argument is not a parameter of the family fitted for the blockcpd object!")
+    }
+    if(!is_index_values_numeric){
+      stop("Input error! The 'index_values' argument is not a numeric vector!")
+    }
+    if(length_index_values != ncol){
+      stop("Input error! The 'index_values' argument size differs from ncol from the fitted model!")
     }
   }
   #---

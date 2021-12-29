@@ -7,30 +7,44 @@
 #' @param blockcpd_obj A fitted blockcpd S3 object provided by the
 #' \link[=fit_blockcpd]{fit_blockcpd} function.
 #' @param parameter The parameter of the family for which to plot the blocked
+#' @param index_values A numerical vector of size ncol that contains the values
+#' of the the variable corresponding to the change points. For example, if your
+#' segmented variable corresponds to a time samples from 0 to 150 sampled each
+#' 15 seconds, the model treats these as values from 1 to 11. To plot on the
+#' variable scale, pass the argument 'index_values = seq(0, 150, 15)'.
+#' @param index_variable_name Name of the variable segmented.
 #' @param pkg Graphical package to be used for plotting. Current values are
 #' "base".
 #'
 #' @export
 plot.blockcpd = function(blockcpd_obj, parameter = NULL,
+                         index_values = NULL, index_variable_name = "Index",
                          pkg = "base"){
   # check if parameter argument is in family parameter list
   if(is.null(parameter)){
     parameter = names(blockcpd_obj$parameters)[1]
   }
+  ncol = blockcpd_obj$metadata$ncol
+
+  if(is.null(index_values)){
+    index_values = 1:ncol
+  }
 
   args_to_check = list(parameter = parameter,
-                       family_parameters = names(blockcpd_obj$parameters))
+                       family_parameters = names(blockcpd_obj$parameters),
+                       is_index_values_numeric = is.numeric(index_values),
+                       length_index_values = length(index_values),
+                       ncol = ncol)
   do.call(check_input, list(caller = as.character(match.call()[[1]]),
                             args_to_check = args_to_check))
 
-  ncol = blockcpd_obj$metadata$ncol
   ncp = blockcpd_obj$ncp
   changepoints = blockcpd_obj$changepoints
   parameter_vec = blockcpd_obj$parameters[[parameter]]
   if(pkg == "base"){
-    sf = stepfun(changepoints, parameter_vec)
-    plot(sf, xlim = c(1, ncol), do.points = F, xaxs = "i",
-         xlab = "Index", ylab = parameter,
+    sf = stepfun(index_values[changepoints], parameter_vec)
+    plot(sf, xlim = c(index_values[1], index_values[ncol]), do.points = F, xaxs = "i",
+         xlab = index_variable_name, ylab = parameter,
          main = paste("Block plot for", parameter, "parameter"))
   }
 

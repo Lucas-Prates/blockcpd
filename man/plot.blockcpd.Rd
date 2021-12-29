@@ -4,13 +4,19 @@
 \alias{plot.blockcpd}
 \title{Plot for blockcpd object}
 \usage{
-\method{plot}{blockcpd}(blockcpd_obj, parameter = NULL, pkg = "base")
+\method{plot}{blockcpd}(blockcpd_obj, parameter = NULL, index_values = NULL, pkg = "base")
 }
 \arguments{
 \item{blockcpd_obj}{A fitted blockcpd S3 object provided by the
 \link[=fit_blockcpd]{fit_blockcpd} function.}
 
 \item{parameter}{The parameter of the family for which to plot the blocked}
+
+\item{index_values}{A numerical vector of size ncol that contains the values
+of the the variable corresponding to the change points. For example, if your
+segmented variable corresponds to a time samples from 0 to 150 sampled each
+15 seconds, the model treats these as values from 1 to 11. To plot on the
+variable scale, pass the argument 'index_values = seq(0, 150, 15)'.}
 
 \item{pkg}{Graphical package to be used for plotting. Current values are
 "base".}
