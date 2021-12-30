@@ -26,13 +26,19 @@ void Hierseg::binary_split(const int& left_index,
                             const int& right_index,
                             const float& current_nll,
                             const float& current_loss) {
-
   Rcpp::checkUserInterrupt(); // check user interruption in rcpp
+  if(right_index - left_index + 1 < 2*min_block_size){
+    loss += current_loss;
+    negloglike += current_nll;
+    return;
+  } // if this restriction is true, we can not split further, so we halt early
+
+
   if(left_index == right_index) {
     loss += current_loss;
     negloglike += current_nll;
     return;
-  }
+  } // this is a subcase of the above since min_block_size >= 1. Just to ensure.
 
   float left_loss = 0;
   float right_loss = current_loss;

@@ -4,7 +4,13 @@
 \alias{plot.blockcpd}
 \title{Plot for blockcpd object}
 \usage{
-\method{plot}{blockcpd}(blockcpd_obj, parameter = NULL, index_values = NULL, pkg = "base")
+\method{plot}{blockcpd}(
+  blockcpd_obj,
+  parameter = NULL,
+  index_values = NULL,
+  index_variable_name = "Index",
+  pkg = "base"
+)
 }
 \arguments{
 \item{blockcpd_obj}{A fitted blockcpd S3 object provided by the
@@ -17,6 +23,8 @@ of the the variable corresponding to the change points. For example, if your
 segmented variable corresponds to a time samples from 0 to 150 sampled each
 15 seconds, the model treats these as values from 1 to 11. To plot on the
 variable scale, pass the argument 'index_values = seq(0, 150, 15)'.}
+
+\item{index_variable_name}{Name of the variable segmented.}
 
 \item{pkg}{Graphical package to be used for plotting. Current values are
 "base".}

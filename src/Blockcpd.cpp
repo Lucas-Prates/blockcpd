@@ -9,7 +9,7 @@ Blockcpd::Blockcpd(String family, const List& suff_stats, Function pen_func,
 
 float Blockcpd::compute_negloglike(const int& left_index,
                                    const int& right_index){
-  if(right_index - left_index < min_block_size){
+  if(right_index - left_index + 1 < min_block_size){
     return INFINITY; //-loglike = -inf to force min_blocK_size restriction
   }
   double loglike = 0;

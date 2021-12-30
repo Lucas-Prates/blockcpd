@@ -10,7 +10,7 @@ fit_blockcpd(
   family = "bernoulli",
   lambda = 1,
   pen_func = bic_loss,
-  min_block_size = 0L,
+  min_block_size = 1L,
   max_blocks = NULL,
   bootstrap = FALSE,
   bootstrap_rep = 100L,
@@ -65,7 +65,7 @@ numeric value.}
 BIC. For user specified functions, check the template in the
 \link[=toy_regularization]{regularization} regularization.rd file.}
 
-\item{min_block_size}{Minimum block size allowed. Default is 0, and the value
+\item{min_block_size}{Minimum block size allowed. Default is 1, and the value
 must be smaller or equal to ncol.}
 
 \item{max_blocks}{An integer greater than 0 that specify the maximum number

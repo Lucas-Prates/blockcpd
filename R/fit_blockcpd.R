@@ -48,7 +48,7 @@
 #' @param pen_func Regularization function used for fitting, with default as the
 #' BIC. For user specified functions, check the template in the
 #' \link[=toy_regularization]{regularization} regularization.rd file.
-#' @param min_block_size Minimum block size allowed. Default is 0, and the value
+#' @param min_block_size Minimum block size allowed. Default is 1, and the value
 #' must be smaller or equal to ncol.
 #' @param max_blocks An integer greater than 0 that specify the maximum number
 #' of blocks fitted by the algorithm. It is only used if dynseg is specified in
@@ -81,7 +81,7 @@ fit_blockcpd = function(data_matrix,
                         family = "bernoulli",
                         lambda = 1.0,
                         pen_func = bic_loss,
-                        min_block_size = 0L,
+                        min_block_size = 1L,
                         max_blocks = NULL,
                         bootstrap = FALSE,
                         bootstrap_rep = 100L,
