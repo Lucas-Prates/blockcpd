@@ -12,8 +12,6 @@ using namespace Rcpp;
 // The importance of this class is to estimate the change point set.
 class Dynseg : public Blockcpd{
 public:
-  // Threshold on the number of blocks
-  int max_blocks;
 
   // The element loss_mat[i][j] corresponds to the loss of the interval [i, j]
   TriangularMatrix<double> loss_mat;

@@ -3,9 +3,10 @@
 using namespace Rcpp;
 
 Blockcpd::Blockcpd(String family, const List& suff_stats, Function pen_func,
-                   int ncol, int min_block_size)
+                   int ncol, int min_block_size, int max_blocks)
   : family(family),  suff_stats(suff_stats), pen_func(pen_func), ncol(ncol),
-    min_block_size(min_block_size), changepoints(0), loss(0), negloglike(0) {}
+    min_block_size(min_block_size), max_blocks(max_blocks),
+    changepoints(0), loss(0), negloglike(0) {}
 
 float Blockcpd::compute_negloglike(const int& left_index,
                                    const int& right_index){

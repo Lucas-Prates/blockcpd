@@ -20,10 +20,12 @@ public:
   float loss; // total regularized loss function for the estimated model
   float negloglike; // total negative log-likelihood
   int min_block_size;
+  int max_blocks;
   List parameters;
 
   Blockcpd(String family, const List& suff_stats,
-           Function pen_func, int ncol, int min_block_size);
+           Function pen_func, int ncol,
+           int min_block_size, int max_blocks);
 
   // Computes the negative log-likelihood for the block defined by the indices
   // Indices are passed considering start index as 1 (not 0, as usual in c++)

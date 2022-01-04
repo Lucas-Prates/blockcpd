@@ -26,7 +26,9 @@ compute_hierseg = function(suff_stats,
                            min_block_size = min_block_size,
                            max_blocks = NULL) {
 
-  # max_blocks is not used in this function
+  if(is.null(max_blocks)){
+    max_blocks = ncol-1
+  }
 
   # Penalization function that will be called in .cpp extension
   hs_pen_function = function(left_index, right_index) {
@@ -36,8 +38,10 @@ compute_hierseg = function(suff_stats,
   hs_output = compute_hierseg_cpp(suff_stats = suff_stats,
                                   family = family,
                                   ncol = ncol,
-                                  hs_pen_function,
-                                  min_block_size = min_block_size)
+                                  min_block_size = min_block_size,
+                                  max_blocks = max_blocks,
+                                  pen_fun = hs_pen_function,
+                                  algorithm_type = "iterative")
 
   model_info = list(changepoints = hs_output[[1]],
                     parameters = hs_output[[2]],

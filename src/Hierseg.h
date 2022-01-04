@@ -6,29 +6,31 @@
 using namespace Rcpp;
 
 // Auxiliar data structure for fitting binary split iteratively
-struct bs_node{
+typedef struct{
   unsigned int split_index;
   unsigned int left, right;
   float nll_gain; // negative log likelihood
   float loss_gain;
-};
+} bs_node;
 
 // Class used to fit the data using the hierarchical algorithm. Inherits from
 // Blockcpd, which provides the members and methods of the statistical model.
 // The importance of this class is to estimate the change point set.
 class Hierseg : public Blockcpd
 {
+private:
+  String algorithm_type; // A string to decide to use recursive or iterative
+                         // implementation of the binary split algorithm
 public:
-
   Hierseg(String family, const List& suff_stats, Function pen_func,
-          int ncol, int min_block_size);
+          int ncol, int min_block_size, int max_blocks, String algorithm_type);
 
   // Wrapper for fitting methods. First, it calls a method to fit the change
   // point set. Then, it calls fit_family_parameters.
   void fit_hierseg();
 
-  bs_node* get_best_split(const unsigned int& left_index,
-                         const unsigned int& right_index);
+  bs_node* get_best_split(unsigned int left_index,
+                          unsigned int right_index);
 
   // FITS -> Change point set
   // Recursive implementation of the hierarchical algorithm
