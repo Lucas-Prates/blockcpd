@@ -28,8 +28,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // compute_hierseg_cpp
-List compute_hierseg_cpp(const List& suff_stats, const String& family, const int& ncol, const int& min_block_size, const Function& pen_func);
-RcppExport SEXP _blockcpd_compute_hierseg_cpp(SEXP suff_statsSEXP, SEXP familySEXP, SEXP ncolSEXP, SEXP min_block_sizeSEXP, SEXP pen_funcSEXP) {
+List compute_hierseg_cpp(const List& suff_stats, const String& family, const int& ncol, const int& min_block_size, const int& max_blocks, const Function& pen_func, const String& algorithm_type);
+RcppExport SEXP _blockcpd_compute_hierseg_cpp(SEXP suff_statsSEXP, SEXP familySEXP, SEXP ncolSEXP, SEXP min_block_sizeSEXP, SEXP max_blocksSEXP, SEXP pen_funcSEXP, SEXP algorithm_typeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -37,8 +37,10 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const String& >::type family(familySEXP);
     Rcpp::traits::input_parameter< const int& >::type ncol(ncolSEXP);
     Rcpp::traits::input_parameter< const int& >::type min_block_size(min_block_sizeSEXP);
+    Rcpp::traits::input_parameter< const int& >::type max_blocks(max_blocksSEXP);
     Rcpp::traits::input_parameter< const Function& >::type pen_func(pen_funcSEXP);
-    rcpp_result_gen = Rcpp::wrap(compute_hierseg_cpp(suff_stats, family, ncol, min_block_size, pen_func));
+    Rcpp::traits::input_parameter< const String& >::type algorithm_type(algorithm_typeSEXP);
+    rcpp_result_gen = Rcpp::wrap(compute_hierseg_cpp(suff_stats, family, ncol, min_block_size, max_blocks, pen_func, algorithm_type));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -121,7 +123,7 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_blockcpd_compute_dynseg_cpp", (DL_FUNC) &_blockcpd_compute_dynseg_cpp, 6},
-    {"_blockcpd_compute_hierseg_cpp", (DL_FUNC) &_blockcpd_compute_hierseg_cpp, 5},
+    {"_blockcpd_compute_hierseg_cpp", (DL_FUNC) &_blockcpd_compute_hierseg_cpp, 7},
     {"_blockcpd_compute_suff_stats_cpp", (DL_FUNC) &_blockcpd_compute_suff_stats_cpp, 2},
     {"_blockcpd_compute_rand", (DL_FUNC) &_blockcpd_compute_rand, 3},
     {"_blockcpd_compute_hausdorff", (DL_FUNC) &_blockcpd_compute_hausdorff, 2},

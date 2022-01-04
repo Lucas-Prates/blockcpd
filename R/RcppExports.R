@@ -5,8 +5,8 @@ compute_dynseg_cpp <- function(suff_stats, family, ncol, min_block_size, max_blo
     .Call(`_blockcpd_compute_dynseg_cpp`, suff_stats, family, ncol, min_block_size, max_blocks, pen_func)
 }
 
-compute_hierseg_cpp <- function(suff_stats, family, ncol, min_block_size, pen_func) {
-    .Call(`_blockcpd_compute_hierseg_cpp`, suff_stats, family, ncol, min_block_size, pen_func)
+compute_hierseg_cpp <- function(suff_stats, family, ncol, min_block_size, max_blocks, pen_func, algorithm_type) {
+    .Call(`_blockcpd_compute_hierseg_cpp`, suff_stats, family, ncol, min_block_size, max_blocks, pen_func, algorithm_type)
 }
 
 compute_suff_stats_cpp <- function(data_mat, family) {

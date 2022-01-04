@@ -9,7 +9,7 @@ elbow_plot(
   lambda_left = 0,
   lambda_right = 10,
   step = 0.5,
-  blockcpd_args = list(),
+  model_args = list(),
   pkg = "base"
 )
 }
@@ -25,7 +25,7 @@ greater than lambda_left.}
 \item{step}{Value by which lambda will be increased. Must be greater than 0,
 with default 1.}
 
-\item{blockcpd_args}{A list with argument values for the
+\item{model_args}{A list with argument values for the
 \link[=fit_blockcpd]{fit_blockcpd} function. The list keys must be the
 arguments names. It must \emph{not} contain the argument 'lambda' or
 'data_matrix'.}
@@ -36,14 +36,15 @@ arguments names. It must \emph{not} contain the argument 'lambda' or
 \value{
 Along with the plot, it returns a list containing the lambda values,
 number of change points per lambda, the negative log likelihood per lambda
-and the blockcpd_args.
+and the model_args.
 }
 \description{
-Plots how the negative log loglikehood estimated by the given model vary
-with the regularization constant lambda. The graphic is combined with the
-"First Repeated Value" heuristics to choose a constant value.
-It is similar to the Elbow method used in clustering. The values of the
-constant range from 'lambda_left' to 'lambda_right', increasing by 'step'.
-For each value, the function \link[=fit_blockcpd]{fit_blockcpd} is run
-with arguments 'blockcpd_args'.
+Plots how the number of change-points estimated by the given model vary
+with the regularization constant lambda. It is similar to the Elbow method
+used in clustering. The values of the constant range from 'lambda_left' to
+'lambda_right', increasing by 'step'. For each value, the function
+\link[=fit_blockcpd]{fit_blockcpd} is run with arguments 'model_args'. The
+modeler should choose the first value by which the number of change-points
+curve starts to "flat-out" after that value. If there are at least 10 values
+of constants to evaluate, a suggestion for lambda is also provided.
 }
