@@ -2,8 +2,8 @@
 
 S3method(plot,blockcpd)
 export(compare_model)
+export(elbow_plot)
 export(fit_blockcpd)
-export(flatplot)
 export(rcpd)
 importFrom(Rcpp,sourceCpp)
 useDynLib(blockcpd, .registration = TRUE)

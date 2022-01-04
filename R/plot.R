@@ -54,9 +54,9 @@ plot.blockcpd = function(blockcpd_obj, parameter = NULL,
 #' Plot to aid choosing regularization constant
 #'
 #' @description
-#' Plots how the number of change points estimated by the given model vary
+#' Plots how the negative log loglikehood estimated by the given model vary
 #' with the regularization constant lambda. The graphic is combined with the
-#' "First Long Flat Interval" heuristics to choose a constant value.
+#' "First Repeated Value" heuristics to choose a constant value.
 #' It is similar to the Elbow method used in clustering. The values of the
 #' constant range from 'lambda_left' to 'lambda_right', increasing by 'step'.
 #' For each value, the function \link[=fit_blockcpd]{fit_blockcpd} is run
@@ -67,7 +67,8 @@ plot.blockcpd = function(blockcpd_obj, parameter = NULL,
 #' @param lambda_left Left most value of lambda. Must be non-negative.
 #' @param lambda_right Right most value of lambda. Must be non-negative and
 #' greater than lambda_left.
-#' @param step Value by which lambda will be increased. Must be greater than 0.
+#' @param step Value by which lambda will be increased. Must be greater than 0,
+#' with default 1.
 #' @param blockcpd_args A list with argument values for the
 #' \link[=fit_blockcpd]{fit_blockcpd} function. The list keys must be the
 #' arguments names. It must *not* contain the argument 'lambda' or
@@ -79,7 +80,7 @@ plot.blockcpd = function(blockcpd_obj, parameter = NULL,
 #' number of change points per lambda, the negative log likelihood per lambda
 #' and the blockcpd_args.
 #' @export
-flatplot = function(data_matrix, lambda_left = 0, lambda_right = 10, step = 0.5,
+elbow_plot = function(data_matrix, lambda_left = 0, lambda_right = 10, step = 0.5,
                     blockcpd_args = list(), pkg = "base"){
 
   # check input
@@ -93,6 +94,8 @@ flatplot = function(data_matrix, lambda_left = 0, lambda_right = 10, step = 0.5,
 
   lambda_set = seq(lambda_left, lambda_right, step)
   lambda_set_len = length(lambda_set)
+  suggested_lambda = NULL
+  suggested_ncp = NULL
   ncp = numeric(lambda_set_len)
   neg_loglike = numeric(lambda_set_len)
   call_arg = c(list(data_matrix = data_matrix, lambda = lambda_set[1]),
@@ -102,6 +105,12 @@ flatplot = function(data_matrix, lambda_left = 0, lambda_right = 10, step = 0.5,
     call_arg$lambda = lambda_set[i]
     model = do.call(fit_blockcpd, call_arg)
     ncp[i] = model$ncp
+    if((i > 1)&&(is.null(suggested_lambda))){
+      if(ncp[i] == ncp[i-1]){
+        suggested_lambda = lambda_set[i-1]
+        suggested_ncp = ncp[i-1]
+      }
+    }
     neg_loglike[i] = model$neg_loglike
   }
   if(pkg == "base"){
@@ -109,9 +118,15 @@ flatplot = function(data_matrix, lambda_left = 0, lambda_right = 10, step = 0.5,
          xlab = "lambda", ylab = "Number of change points",
          main = "Flatplot - number of change points per regularization constant value")
     lines(lambda_set, ncp)
+    if(!is.null(suggested_lambda)){
+      abline(v = suggested_lambda, col = 'red', lty = "dashed")
+      abline(h = suggested_ncp, col = 'red', lty = "dashed")
+    }
   }
   flatplot_info = list(lambda = lambda_set, ncp = ncp,
-                       neg_loglike = neg_loglike)
+                       neg_loglike = neg_loglike,
+                       suggested_lambda = suggested_lambda,
+                       suggested_ncp = suggested_ncp)
 
   invisible(flatplot_info)
 }
