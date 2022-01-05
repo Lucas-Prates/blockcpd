@@ -110,9 +110,19 @@ elbow_plot = function(data_matrix, lambda_left = 0, lambda_right = 10,
   }
   # suggests a lambda based on estimated curvature
   if(lambda_set_len >= 10){
-    curvature_info = compute_max_curvature(lambda_set, ncp, step)
-    suggested_lambda = curvature_info$argmax_curv
-    suggested_ncp = curvature_info$fmax_curv
+    # If there is a ncp value that repeats for different lambdas, choose the
+    # smallest lambda such that it occurs.
+    rep_index = which(diff(ncp) == 0)[1]
+    if(!is.na(rep_index)){
+      suggested_lambda = lambda_set[rep_index]
+      suggested_ncp = ncp[rep_index]
+    }
+    # otherwise, make a suggestion based on estimated ncp curvature
+    else{
+      curvature_info = compute_max_curvature(lambda_set, ncp, step)
+      suggested_lambda = curvature_info$argmax_curv
+      suggested_ncp = curvature_info$fmax_curv
+    }
   }
   if(pkg == "base"){
     plot(lambda_set, ncp,
