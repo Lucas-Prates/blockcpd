@@ -5,7 +5,7 @@
 \title{Compare or evaluate model performance with respect
 to other model or ground truth}
 \usage{
-compare_model(model1, model2, m = NULL)
+compare_model(model1, model2, ncol = NULL)
 }
 \arguments{
 \item{model1}{The first blockcpd object or list of sorted integers
@@ -14,8 +14,8 @@ representing the change point set.}
 \item{model2}{The second blockcpd object or list of sorted integers
 representing the change point set.}
 
-\item{m}{The number of variables which the model was fitted on. Only needs to
-be passed if both arguments are change point sets instead of a blockcpd
+\item{ncol}{The number of variables which the model was fitted on. Only needs
+to be passed if both arguments are change point sets instead of a blockcpd
 object.}
 }
 \description{

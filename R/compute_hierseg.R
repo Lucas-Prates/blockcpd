@@ -9,37 +9,45 @@
 #' @param suff_stats Sufficient statistics to perform change point analysis
 #' @param family The name of the family used to fit the model
 #' @param lambda Penalization constant
-#' @param n Number of samples
-#' @param m Number of variables
+#' @param nrow Number of rows or samples
+#' @param ncol Number of columns or variables
 #' @param pen_func A penalization function defined i integer intervals
-#'   The function signature should be pen(left_index, right_index, n, m),
-#'   where the left_index:right_index is the integer interval, n the sample
-#'   size and m the number of variables/columns.
+#'   The function signature should be pen(left_index, right_index, nrow, ncol),
+#'   where the left_index:right_index is the integer interval, nrow the sample
+#'   size and ncol the number of variables/columns.
+#' @param min_block_size Minimum block size allowed. Default is 0, and the value
+#' must be smaller or equal to ncol.
 compute_hierseg = function(suff_stats,
                            family,
                            lambda = 1,
-                           n,
-                           m,
+                           nrow,
+                           ncol,
                            pen_func = bic_loss,
+                           min_block_size = min_block_size,
                            max_blocks = NULL) {
 
-  # max_blocks is not used in this function
+  if(is.null(max_blocks)){
+    max_blocks = ncol-1
+  }
 
   # Penalization function that will be called in .cpp extension
   hs_pen_function = function(left_index, right_index) {
-    return( lambda * pen_func(left_index, right_index, n, m) )
+    return( lambda * pen_func(left_index, right_index, nrow, ncol) )
   }
 
   hs_output = compute_hierseg_cpp(suff_stats = suff_stats,
                                   family = family,
-                                  ncol = m,
-                                  hs_pen_function)
+                                  ncol = ncol,
+                                  min_block_size = min_block_size,
+                                  max_blocks = max_blocks,
+                                  pen_fun = hs_pen_function,
+                                  algorithm_type = "iterative")
 
   model_info = list(changepoints = hs_output[[1]],
                     parameters = hs_output[[2]],
                     loss = hs_output[[3]],
                     neg_loglike = hs_output[[4]],
-                    n_cp = length(hs_output[[1]])
+                    ncp = length(hs_output[[1]])
                     )
 
   return(model_info)

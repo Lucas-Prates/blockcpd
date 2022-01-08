@@ -8,9 +8,10 @@ compute_dynseg(
   suff_stats,
   family,
   lambda = 1,
-  n,
-  m,
-  max_blocks = m - 1,
+  nrow,
+  ncol,
+  min_block_size = min_block_size,
+  max_blocks = ncol - 1,
   pen_func = bic_loss
 )
 }
@@ -19,20 +20,23 @@ compute_dynseg(
 
 \item{family}{The name of the family used to fit the model}
 
-\item{lambda}{Penalization constant.}
+\item{lambda}{Penalization constant}
 
-\item{n}{Number of samples}
+\item{nrow}{Number of rows or samples}
 
-\item{m}{Number of variables}
+\item{ncol}{Number of columns or variables}
+
+\item{min_block_size}{Minimum block size allowed. Default is 0, and the value
+must be smaller or equal to ncol.}
 
 \item{max_blocks}{Threshold on the number of block segments to fit the model.
 Set low values for this parameters if having performance issues on large
 data sets.}
 
 \item{pen_func}{A penalization function defined i integer intervals
-The function signature should be pen(left_index, right_index, n, m),
-where the left_index:right_index is the integer interval, n the sample
-size and m the number of variables/columns.}
+The function signature should be pen(left_index, right_index, nrow, ncol),
+where the left_index:right_index is the integer interval, nrow the sample
+size and ncol the number of variables/columns.}
 }
 \description{
 Computes the exact solution of the regularized loss optimization problem,

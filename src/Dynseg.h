@@ -12,14 +12,12 @@ using namespace Rcpp;
 // The importance of this class is to estimate the change point set.
 class Dynseg : public Blockcpd{
 public:
-  // Threshold on the number of blocks
-  int max_blocks;
 
   // The element loss_mat[i][j] corresponds to the loss of the interval [i, j]
   TriangularMatrix<double> loss_mat;
 
   Dynseg(String family, const List& suff_stats, Function pen_func,
-         int ncol, int max_blocks);
+         int ncol, int min_block_size, int max_blocks);
 
   // Wrapper for fitting methods. First, it calls a method to fit the change
   // point set. Then, it calls fit_family_parameters.

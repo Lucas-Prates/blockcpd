@@ -43,14 +43,13 @@
 #'  should an positive integer.
 #' }
 #'
-#' @param lambda The penalization constant. A list of penalization constant can
-#' be passed if the argument "select_lambda" is TRUE.
-#' @param select_lambda A flag to decide if the BIC criterion must be used to
-#' choose the best lambda from the list of values provided in the "lambda"
-#' argument.
+#' @param lambda The penalization constant. Must be a unique non-negative
+#' numeric value.
 #' @param pen_func Regularization function used for fitting, with default as the
 #' BIC. For user specified functions, check the template in the
 #' \link[=toy_regularization]{regularization} regularization.rd file.
+#' @param min_block_size Minimum block size allowed. Default is 1, and the value
+#' must be smaller or equal to ncol.
 #' @param max_blocks An integer greater than 0 that specify the maximum number
 #' of blocks fitted by the algorithm. It is only used if dynseg is specified in
 #' the "method" argument.
@@ -58,7 +57,8 @@
 #' estimation of the probability of each index being detected as a change point.
 #' It also provides a sample of all the metrics implemented computed with
 #' respect to the final change point set estimated.
-#' @param boostrap_rep Number of bootstrap repetitions.
+#' @param boostrap_samples Number of bootstrap samples.
+#' @param skip_input_check Flag indicating if input checking should be skipped.
 #'
 #' @return The function returns a S3 object of the type blockcpd.
 #' \itemize{
@@ -69,137 +69,102 @@
 #'  \item{"loss"} the final loss evaluated on the entire data set for the
 #'  returned model;
 #'  \item{"neg_loglike"} The negative log likelihood of the model;
-#'  \item{"n_cp"} number of change points estimated;
+#'  \item{"ncp"} number of change points estimated;
 #'  \item{"metadata"} Arguments passed to fit the model;
 #'  \item{"bootstrap_info"} if bootstrap argument is true, this contains a list
 #'  of the metrics for each bootstrap sample, and contains the estimated
 #'  probability of each index being detected as a change point;
-#'  \item{"lambda_info"} If select_lambda argument is true, this contains a list
-#'  summarizing the the BIC values and the best value for lambda.
 #' }
 #' @export
 fit_blockcpd = function(data_matrix,
                         method = "hierseg",
                         family = "bernoulli",
-                        lambda = 1,
-                        select_lambda = FALSE,
+                        lambda = 1.0,
                         pen_func = bic_loss,
+                        min_block_size = 1L,
                         max_blocks = NULL,
                         bootstrap = FALSE,
-                        bootstrap_rep = 100L,
-                        bootstrap_progress = FALSE) {
+                        bootstrap_samples = 100L,
+                        bootstrap_progress = FALSE,
+                        skip_input_check = FALSE) {
 
-  ### Check inputs
-  IMPLEMENTED_METHODS = c("hierseg", "dynseg")
-
-  IMPLEMENTED_FAMILIES = c("normal", "bernoulli", "binaryMarkov",
-                           "exponential", "poisson")
-
-  if ( !(method %in% IMPLEMENTED_METHODS) ) {
-    stop("Error! The 'method' argument provided is not implemented!")
+  nrow = nrow(data_matrix)
+  ncol = ncol(data_matrix)
+  # input check
+  if(!skip_input_check){
+    args_to_check = list(method = method,
+                         family = family,
+                         ncol = ncol,
+                         min_block_size = min_block_size,
+                         lambda = lambda)
+    do.call(check_input, list(caller = as.character(match.call()[[1]]),
+                              args_to_check = args_to_check))
   }
-
-  if ( !(family %in% IMPLEMENTED_FAMILIES) ) {
-    stop("Error! The 'family' argument provided is not implemented!")
-  }
-  ###
-
-  n = nrow(data_matrix)
-  m = ncol(data_matrix)
-  if(is.null(max_blocks)){max_blocks = m}
+  if(is.null(max_blocks)){max_blocks = ncol}
 
   methodcall_name = paste0("compute_", method) # method name in package
   suff_stats = compute_suff_stats(data_matrix, family)
 
-  # Fits a model for each lambda and chooses the best using the BIC criterion
-  if(select_lambda){
-    bic_value = rep(0, length(lambda))
-    best_bic = Inf
-    best_i = lambda[1]
-    for(i in 1:length(lambda)){
-      lambda_i = lambda[i]
-      fit_arguments = list(suff_stats = suff_stats,
-                           family = family,
-                           n = n,
-                           m = m,
-                           lambda = lambda_i,
-                           pen_func = pen_func,
-                           max_blocks = max_blocks)
+  # Fits model for the given lambda
+  fit_arguments   = list(suff_stats = suff_stats,
+                         family = family,
+                         nrow = nrow,
+                         ncol = ncol,
+                         lambda = lambda,
+                         pen_func = pen_func,
+                         min_block_size = min_block_size,
+                         max_blocks = max_blocks)
 
-      model_lambda = do.call(methodcall_name, fit_arguments)
-      n_param = model_lambda$n_cp + 1
-      bic_value[i] = 2*model_lambda$neg_loglike + log(n)*n_param
-      # Avoid recomputation of the model
-      if(bic_value[i] < best_bic){
-        model = model_lambda
-        best_lambda = lambda[i]
-        best_bic = bic_value[i]
-      }
-    }
-  }
-  else{
-    # Fits model for the unique given lambda
-    # If a list of lambdas is passed, only the first value is considered
-    best_lambda = lambda # for bootstrap argument consistency
-    fit_arguments   = list(suff_stats = suff_stats,
-                           family = family,
-                           n = n,
-                           m = m,
-                           lambda = lambda,
-                           pen_func = pen_func,
-                           max_blocks = max_blocks)
-
-    model = do.call(methodcall_name, fit_arguments)
-  }
-
+  model = do.call(methodcall_name, fit_arguments)
 
   ### ------------------------------------------------- ###
   # Bootstrap computation
-  # Notice that best_lambda is used in the bootstrap computations
   # ??? Separate this in a new function ???
   if(bootstrap){
-    cp_freq = rep(0, m) # Frequency of an index being detected as a change point
-    haus_boot = rep(0, bootstrap_rep)
-    symdiff_boot = rep(0, bootstrap_rep)
-    rand_boot = rep(0, bootstrap_rep)
-    jaccard_boot = rep(0, bootstrap_rep)
-    ncp_boot = rep(0, bootstrap_rep)
+    cp_frequency = rep(0, ncol) # Frequency of an index being detected as a change point
+    haus_boot = rep(0, bootstrap_samples)
+    symdiff_values = rep(0, bootstrap_samples)
+    randindex_values = rep(0, bootstrap_samples)
+    jaccard_values = rep(0, bootstrap_samples)
+    ncp_values = rep(0, bootstrap_samples)
 
-    for(i in 1:bootstrap_rep){
-      boot_samp = sample(n, n, replace = TRUE)
+    for(i in 1:bootstrap_samples){
+      boot_samp = sample(nrow, nrow, replace = TRUE)
       suff_stats_boot = compute_suff_stats(data_matrix[boot_samp, ], family)
       fit_arguments_boot = list(suff_stats = suff_stats_boot,
                                 family = family,
-                                n = n,
-                                m = m,
-                                lambda = best_lambda,
+                                nrow = nrow,
+                                ncol = ncol,
+                                lambda = lambda,
                                 pen_func = pen_func,
+                                min_block_size = min_block_size,
                                 max_blocks = max_blocks)
       model_boot = do.call(methodcall_name, fit_arguments_boot)
       # For each index (column) detected as change point, increment it
-      cp_freq[model_boot$changepoints] = cp_freq[model_boot$changepoints] + 1
+      cp_frequency[model_boot$changepoints] = cp_frequency[model_boot$changepoints] + 1
 
       # Metrics evaluation with respect to final estimate of change point set
       haus_boot[i] = compute_hausdorff(model$changepoints,
                                        model_boot$changepoints)
-      symdiff_boot[i] = compute_symdiff(model$changepoints,
+      symdiff_values[i] = compute_symdiff(model$changepoints,
                                         model_boot$changepoints)
-      rand_boot[i] = compute_rand(model$changepoints,
-                                  model_boot$changepoints, m)
-      jaccard_boot[i] = compute_jaccard(model$changepoints,
+      randindex_values[i] = compute_rand(model$changepoints,
+                                  model_boot$changepoints, ncol)
+      jaccard_values[i] = compute_jaccard(model$changepoints,
                                         model_boot$changepoints)
-      ncp_boot[i] = length(model_boot$changepoints)
+      ncp_values[i] = length(model_boot$changepoints)
       if(bootstrap_progress){
-        cat(paste0("\r Iteration ", i, " of ", bootstrap_rep))
+        cat(paste0("\r Iteration ", i, " of ", bootstrap_samples))
       }
     }
     if(bootstrap_progress){cat("\n")}
-    bootstrap_info = list(b_samples = bootstrap_rep,
-                           cp_freq = cp_freq,
-                           symdiff_boot = symdiff_boot,
-                           rand_boot = rand_boot,
-                           jaccard_boot = jaccard_boot,
-                           ncp_boot = ncp_boot)
+
+    bootstrap_info = list(bootstrap_samples = bootstrap_samples,
+                          cp_frequency = cp_frequency,
+                          symdiff_values = symdiff_values,
+                          randindex_values = randindex_values,
+                          jaccard_values = jaccard_values,
+                          ncp_values = ncp_values)
 
     model$bootstrap_info = bootstrap_info
   }else{model$bootstrap_info = NULL}
@@ -208,17 +173,13 @@ fit_blockcpd = function(data_matrix,
   # Wrap results in a S3 class called blockcpd
   model$metadata = list(method = method,
                         family = family,
-                        n = n,
-                        m = m,
+                        nrow = nrow,
+                        ncol = ncol,
                         bootstrap = bootstrap,
                         lambda = lambda,
                         pen_func = pen_func,
+                        min_block_size = min_block_size,
                         max_blocks = max_blocks)
-  if(select_lambda){
-    model$lambda_info = list(lambda = lambda,
-                             bic_value = bic_value,
-                             best_lambda = best_lambda)
-  }
   class(model) = "blockcpd"
 
   return(model)

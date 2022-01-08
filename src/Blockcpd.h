@@ -13,15 +13,19 @@ using namespace Rcpp;
 class Blockcpd{
 public:
   String family; // family fitted
-  List suff_stats; // list of sufficient statistics. Depends on family
+  List suff_stats; // list of sufficient statistics for the family
   Function pen_func; // penalization function defined by user
-  int ncol; // number of columns, or the number of variables, also called m
-  std::vector<int> changepoints; // change points detected by method
-  float loss; // total loss function for the estimated model
+  int ncol;
+  std::vector<int> changepoints;
+  float loss; // total regularized loss function for the estimated model
   float negloglike; // total negative log-likelihood
+  int min_block_size;
+  int max_blocks;
   List parameters;
 
-  Blockcpd(String family, const List& suff_stats, Function pen_func, int ncol);
+  Blockcpd(String family, const List& suff_stats,
+           Function pen_func, int ncol,
+           int min_block_size, int max_blocks);
 
   // Computes the negative log-likelihood for the block defined by the indices
   // Indices are passed considering start index as 1 (not 0, as usual in c++)

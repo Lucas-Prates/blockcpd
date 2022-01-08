@@ -4,25 +4,25 @@
 \alias{toy_regularization}
 \title{Implements the regularization functions used in the estimation}
 \usage{
-toy_regularization(left_index, right_index, n, m)
+toy_regularization(left_index, right_index, nrow, ncol)
 }
 \description{
 The estimator in this package computes the optimum of
-\eqn{-l(C, p) + \lambda*R(leftIndex, rightIndex, n, m)}, where l is the
+\eqn{-l(C, p) + \lambda*R(leftIndex, rightIndex, nrow, ncol)}, where l is the
 log likelihood of the family, lambda is the penalization constant and R
 is the regularization function. The user can create his own regularization
 function and pass as an argument to \link[fit_blockcpd]{fit_blockcpd}. It
-should have four arguments, in the following order: leftIndex, rightIndex, n
-(the sample size) and m (the number of columns or variables).
+should have four arguments, in the following order: leftIndex, rightIndex,
+nrow (the sample size) and ncol (the number variables).
 If the function depends on leftIndex and rightIndex, it will be
 non-homogeneous, which might be interesting in some applications.
 The package implements some functions as an example, but uses only
-bic_loss_hs as the default. The algorithm is consistent as long as the
+bic_loss as the default. The algorithm is consistent as long as the
 the regularization is bounded by a constant.
 }
 \examples{
-my_reg <- function(leftIndex, rightIndex, n, m){
+my_reg <- function(leftIndex, rightIndex, nrow, ncol){
     block_size = (rightIndex - leftIndex + 1)
-    return(log(n*m)*(1/block_size))
+    return(log(nrow*ncol)*(1/block_size))
 }
 }

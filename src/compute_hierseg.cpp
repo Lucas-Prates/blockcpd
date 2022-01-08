@@ -12,9 +12,13 @@ using namespace Rcpp;
 List compute_hierseg_cpp(const List& suff_stats,
                          const String& family,
                          const int& ncol,
-                         const Function& pen_func) {
+                         const int& min_block_size,
+                         const int& max_blocks,
+                         const Function& pen_func,
+                         const String& algorithm_type) {
 
-  Hierseg hierseg(family, suff_stats, pen_func, ncol);
+  Hierseg hierseg(family, suff_stats, pen_func,
+                  ncol, min_block_size, max_blocks, algorithm_type);
 
   // Estimation of parameters
   hierseg.fit_hierseg();

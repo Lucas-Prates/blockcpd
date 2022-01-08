@@ -4,9 +4,8 @@
 using namespace Rcpp;
 
 Dynseg::Dynseg(String family, const List& suff_stats, Function pen_func,
-               int ncol, int max_blocks)
-  : Blockcpd(family, suff_stats, pen_func, ncol),
-    max_blocks(max_blocks),
+               int ncol, int min_block_size, int max_blocks)
+  : Blockcpd(family, suff_stats, pen_func, ncol, min_block_size, max_blocks),
     loss_mat(ncol, ncol) {}
 
 void Dynseg::fit_dynseg(){

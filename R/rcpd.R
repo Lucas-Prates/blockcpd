@@ -12,14 +12,15 @@ generate_na = function(n_samples, prob){
 #' Sampler for the CPD Block Model
 #'
 #' @description
-#' Creates a \eqn{n \times m} matrix with \eqn{k} change points. In between
-#' change points, the random variables are i.i.d. sampled from the given family
-#' and parameters
+#' Creates a \eqn{nrow \times ncol} matrix with \eqn{ncp} change points.
+#' In between change points, the random variables are i.i.d. sampled from the
+#' given family and parameters
 #'
-#' @param n Sample size.
-#' @param m Array length.
-#' @param k Number of change points.  The number of blocks is \eqn{k + 1}. It is
-#' overridden if changepoints is non-NULL.
+#' @param nrow Number of rows, or sample size, of the data.
+#' @param ncol Number of columns of data matrix. It is the number of variables for
+#' each sample.
+#' @param ncp Number of change points.  The number of blocks is \eqn{ncp + 1}.
+#' It is overridden if changepoints is non-NULL.
 #' @param family The family model to be sampled. The families currently
 #' implemented are:
 #'
@@ -35,19 +36,19 @@ generate_na = function(n_samples, prob){
 #'  \item[poisson] Sample independent Poisson with rate parameter defined
 #'  by the block.
 #' }
-#' @param parameters List of parameters containing \eqn{k + 1} dimensional
+#' @param parameters List of parameters containing \eqn{ncp + 1} dimensional
 #' parameter vectors of each block. If NULL, the parameters are sampled
 #' randomly.
 #'
-#' @param changepoints A sorted vector of size \eqn{k} containing integers as
-#'  change point locations. The change points are between 1 and \eqn{m-1}. If
-#'  NULL, the change points are sampled uniformly in \eqn{[1, m-1]}.
+#' @param changepoints A sorted vector of size \eqn{ncp} containing integers as
+#'  change point locations. The change points are between 1 and \eqn{ncol-1}. If
+#'  NULL, the change points are sampled uniformly in \eqn{[1, ncol-1]}.
 #' @param  prob_NA Probability of each entry of being NA. Default is 0.
 #'
 #' @export
-rcpd = function(n = 100,
-                m = 50,
-                k = 1,
+rcpd = function(nrow = 100,
+                ncol = 50,
+                ncp = 1,
                 family = "bernoulli",
                 parameters = NULL,
                 changepoints = NULL,
@@ -56,62 +57,56 @@ rcpd = function(n = 100,
   # Setup variables if NULL or check for input errors if the user specified the
   # arguments
   #---------
+  IMPLEMENTED_FAMILIES = c("normal", "bernoulli", "binaryMarkov",
+                           "exponential", "poisson")
+
+  args_to_check = list(ncp = ncp, ncol = ncol, nrow = nrow,
+                       changepoints = changepoints,
+                       family = family,
+                       IMPLEMENTED_FAMILIES = IMPLEMENTED_FAMILIES)
+  do.call(check_input, list(caller = as.character(match.call()[[1]]),
+                            args_to_check = args_to_check))
+
   if (is.null(changepoints)) {
-    if ((k >= m)||(k < 0)){
-      stop(paste0("Input error! The number of change points k must be between ",
-                  "0 and m."))
-    }
     if(family == "binaryMarkov"){
-      k = min(k, floor(m/2))
-      changepoints = sort(c(0, sample(2:(m-2), k, replace = FALSE), m))
+      ncp = min(ncp, floor(ncol/2))
+      changepoints = sort(c(0, sample(2:(ncol-2), ncp, replace = FALSE), ncol))
       while(min(diff(changepoints)) == 1){
-        changepoints = sort(c(0, sample(2:(m-2), k, replace = FALSE), m))
+        changepoints = sort(c(0, sample(2:(ncol-2), ncp, replace = FALSE), ncol))
       }
     }
     else{
-      changepoints = sort(c(0, sample(1:(m-1), k, replace = FALSE), m))
+      changepoints = sort(c(0, sample(1:(ncol-1), ncp, replace = FALSE), ncol))
     }
   }
 
   # Check if the change point vector provided is valid
   # and append auxiliary change points
   else {
-
-    if ((any(changepoints <= 0)) || (any(changepoints >= m))) {
-      stop("Input error! Change point vector entries must vary from 1 to m-1.")
-    }
-
-    k = length(changepoints)
+    ncp = length(changepoints)
     # Auxiliary change points for sampling
-    changepoints = c(0, sort(changepoints), m)
-
+    changepoints = c(0, sort(changepoints), ncol)
   }
 
 
   #---------
-  IMPLEMENTED_FAMILIES = c("normal", "bernoulli", "binaryMarkov",
-                           "exponential", "poisson")
 
-  if (!(family %in% IMPLEMENTED_FAMILIES)){
-    stop(paste0("Input error! The argument 'family' provided is not
-                 the list of possible families."))
-  }
   if(family == "bernoulli"){
     if (is.null(parameters)) {
-      parameters = list(prob = stats::runif(k+1))
+      parameters = list(prob = stats::runif(ncp + 1))
     }
-    sampler = function(n, i){
-      return(stats::rbinom(n , size = 1, parameters[[1]][i]))
+    sampler = function(nrow, i){
+      return(stats::rbinom(nrow , size = 1, parameters[[1]][i]))
     }
   }
   if(family == "normal"){
     if (is.null(parameters)) {
-      mean_vec = stats::rnorm(k + 1, 0, 10)
-      var_vec = stats::rexp(k + 1)
+      mean_vec = stats::rnorm(ncp + 1, 0, 10)
+      var_vec = stats::rexp(ncp + 1)
       parameters = list(mean = mean_vec, var = var_vec)
     }
-    sampler = function(n, i){
-      return(stats::rnorm(n,
+    sampler = function(nrow, i){
+      return(stats::rnorm(nrow,
                           parameters[[1]][i],
                           sqrt(parameters[[2]][i]))
       )
@@ -123,47 +118,47 @@ rcpd = function(n = 100,
   # since it is not independent
   if(family == "binaryMarkov"){
     if (is.null(parameters)) {
-      parameters = list(prob00 = stats::runif(k+1),
-                        prob11 = stats::runif(k+1))
+      parameters = list(prob00 = stats::runif(ncp + 1),
+                        prob11 = stats::runif(ncp + 1))
     }
     data_matrix = rcpd_cpp(family = "binaryMarkov",
-                           n,
-                           m,
+                           nrow,
+                           ncol,
                            changepoints,
                            parameters)
     if(prob_NA != 0){
-      data_matrix = data_matrix * generate_na(n*m, prob_NA)
+      data_matrix = data_matrix * generate_na(nrow*ncol, prob_NA)
     }
     data_list = list(data_matrix = data.matrix(data_matrix),
-                     changepoints = changepoints[-c(1, k+2)], # remove 0 and m
+                     changepoints = changepoints[-c(1, ncp + 2)], # remove aux cp
                      parameters = parameters)
     return(data_list)
   }
 
   if(family == "exponential"){
     if (is.null(parameters)) {
-      parameters = list(scale = stats::runif(k+1))
+      parameters = list(scale = stats::runif(ncp + 1))
     }
-    sampler = function(n, i){
-      return(stats::rexp(n, 1.0/parameters[[1]][i]))
+    sampler = function(nrow, i){
+      return(stats::rexp(nrow, 1.0/parameters[[1]][i]))
     }
   }
 
   if(family == "poisson"){
     if (is.null(parameters)) {
-      parameters = list(rate = stats::runif(k+1))
+      parameters = list(rate = stats::runif(ncp + 1))
     }
-    sampler = function(n, i){
-      return(stats::rpois(n , parameters[[1]][i]))
+    sampler = function(nrow, i){
+      return(stats::rpois(nrow, parameters[[1]][i]))
     }
   }
 
   # Generate data
-  data_matrix = matrix(0, nrow = n, ncol = m)
-  for (i in 1:(k + 1)) {
+  data_matrix = matrix(0, nrow = nrow, ncol = ncol)
+  for (i in 1:(ncp + 1)) {
     # A block starts at changepoints[i] + 1 and ends at changepoints[i+1]
     interval = (changepoints[i] + 1):(changepoints[i + 1])
-    n_samples = length(interval) * n
+    n_samples = length(interval) * nrow
     data_matrix[, interval] = sampler(n_samples, i)
     if (prob_NA != 0) {
       data_matrix[, interval] = data_matrix[, interval] * generate_na(n_samples,
@@ -173,7 +168,7 @@ rcpd = function(n = 100,
 
   # Put relevant information in a list and remove auxiliary change points
   data_list = list(data_matrix = data.matrix(data_matrix),
-                    changepoints = changepoints[-c(1, k+2)], # remove 0 and m
+                    changepoints = changepoints[-c(1, ncp + 2)], # remove aux cp
                     parameters = parameters)
   return(data_list)
 }

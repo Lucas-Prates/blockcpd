@@ -5,9 +5,9 @@
 \title{Sampler for the CPD Block Model}
 \usage{
 rcpd(
-  n = 100,
-  m = 50,
-  k = 1,
+  nrow = 100,
+  ncol = 50,
+  ncp = 1,
   family = "bernoulli",
   parameters = NULL,
   changepoints = NULL,
@@ -15,12 +15,13 @@ rcpd(
 )
 }
 \arguments{
-\item{n}{Sample size.}
+\item{nrow}{Number of rows, or sample size, of the data.}
 
-\item{m}{Array length.}
+\item{ncol}{Number of columns of data matrix. It is the number of variables for
+each sample.}
 
-\item{k}{Number of change points.  The number of blocks is \eqn{k + 1}. It is
-overridden if changepoints is non-NULL.}
+\item{ncp}{Number of change points.  The number of blocks is \eqn{ncp + 1}.
+It is overridden if changepoints is non-NULL.}
 
 \item{family}{The family model to be sampled. The families currently
 implemented are:
@@ -38,18 +39,18 @@ defined by the block.
 by the block.
 }}
 
-\item{parameters}{List of parameters containing \eqn{k + 1} dimensional
+\item{parameters}{List of parameters containing \eqn{ncp + 1} dimensional
 parameter vectors of each block. If NULL, the parameters are sampled
 randomly.}
 
-\item{changepoints}{A sorted vector of size \eqn{k} containing integers as
-change point locations. The change points are between 1 and \eqn{m-1}. If
-NULL, the change points are sampled uniformly in \eqn{[1, m-1]}.}
+\item{changepoints}{A sorted vector of size \eqn{ncp} containing integers as
+change point locations. The change points are between 1 and \eqn{ncol-1}. If
+NULL, the change points are sampled uniformly in \eqn{[1, ncol-1]}.}
 
 \item{prob_NA}{Probability of each entry of being NA. Default is 0.}
 }
 \description{
-Creates a \eqn{n \times m} matrix with \eqn{k} change points. In between
-change points, the random variables are i.i.d. sampled from the given family
-and parameters
+Creates a \eqn{nrow \times ncol} matrix with \eqn{ncp} change points.
+In between change points, the random variables are i.i.d. sampled from the
+given family and parameters
 }
