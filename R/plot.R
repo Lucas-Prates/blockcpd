@@ -127,7 +127,7 @@ elbow_plot = function(data_matrix, lambda_left = 0, lambda_right = 10,
   if(pkg == "base"){
     plot(lambda_set, ncp,
          xlab = "lambda", ylab = "Number of change points",
-         main = "Elbow plot- number of change points per regularization constant value")
+         main = "Number of change points vs penalization constant")
     lines(lambda_set, ncp)
     if(!is.null(suggested_lambda)){
       abline(v = suggested_lambda, col = 'red', lty = "dashed")
@@ -187,7 +187,7 @@ confidence_plot = function(model, scale = "percentage",
          xlab = index_variable_name,
          ylab = paste0("Detection ", scale),
          main = paste0("Bootstrap estimated detection ",
-                       scale, " x ", index_variable_name))
+                       scale, " vs ", index_variable_name))
     lines(index_values, y_values)
     abline(v = model$changepoints, col = "red", lty = "dashed")
   }
