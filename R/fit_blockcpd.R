@@ -57,7 +57,7 @@
 #' estimation of the probability of each index being detected as a change point.
 #' It also provides a sample of all the metrics implemented computed with
 #' respect to the final change point set estimated.
-#' @param boostrap_rep Number of bootstrap repetitions.
+#' @param boostrap_samples Number of bootstrap samples.
 #' @param skip_input_check Flag indicating if input checking should be skipped.
 #'
 #' @return The function returns a S3 object of the type blockcpd.
@@ -84,7 +84,7 @@ fit_blockcpd = function(data_matrix,
                         min_block_size = 1L,
                         max_blocks = NULL,
                         bootstrap = FALSE,
-                        bootstrap_rep = 100L,
+                        bootstrap_samples = 100L,
                         bootstrap_progress = FALSE,
                         skip_input_check = FALSE) {
 
@@ -121,14 +121,14 @@ fit_blockcpd = function(data_matrix,
   # Bootstrap computation
   # ??? Separate this in a new function ???
   if(bootstrap){
-    cp_freq = rep(0, ncol) # Frequency of an index being detected as a change point
-    haus_boot = rep(0, bootstrap_rep)
-    symdiff_boot = rep(0, bootstrap_rep)
-    rand_boot = rep(0, bootstrap_rep)
-    jaccard_boot = rep(0, bootstrap_rep)
-    ncp_boot = rep(0, bootstrap_rep)
+    cp_frequency = rep(0, ncol) # Frequency of an index being detected as a change point
+    haus_boot = rep(0, bootstrap_samples)
+    symdiff_values = rep(0, bootstrap_samples)
+    randindex_values = rep(0, bootstrap_samples)
+    jaccard_values = rep(0, bootstrap_samples)
+    ncp_values = rep(0, bootstrap_samples)
 
-    for(i in 1:bootstrap_rep){
+    for(i in 1:bootstrap_samples){
       boot_samp = sample(nrow, nrow, replace = TRUE)
       suff_stats_boot = compute_suff_stats(data_matrix[boot_samp, ], family)
       fit_arguments_boot = list(suff_stats = suff_stats_boot,
@@ -141,29 +141,30 @@ fit_blockcpd = function(data_matrix,
                                 max_blocks = max_blocks)
       model_boot = do.call(methodcall_name, fit_arguments_boot)
       # For each index (column) detected as change point, increment it
-      cp_freq[model_boot$changepoints] = cp_freq[model_boot$changepoints] + 1
+      cp_frequency[model_boot$changepoints] = cp_frequency[model_boot$changepoints] + 1
 
       # Metrics evaluation with respect to final estimate of change point set
       haus_boot[i] = compute_hausdorff(model$changepoints,
                                        model_boot$changepoints)
-      symdiff_boot[i] = compute_symdiff(model$changepoints,
+      symdiff_values[i] = compute_symdiff(model$changepoints,
                                         model_boot$changepoints)
-      rand_boot[i] = compute_rand(model$changepoints,
+      randindex_values[i] = compute_rand(model$changepoints,
                                   model_boot$changepoints, ncol)
-      jaccard_boot[i] = compute_jaccard(model$changepoints,
+      jaccard_values[i] = compute_jaccard(model$changepoints,
                                         model_boot$changepoints)
-      ncp_boot[i] = length(model_boot$changepoints)
+      ncp_values[i] = length(model_boot$changepoints)
       if(bootstrap_progress){
-        cat(paste0("\r Iteration ", i, " of ", bootstrap_rep))
+        cat(paste0("\r Iteration ", i, " of ", bootstrap_samples))
       }
     }
     if(bootstrap_progress){cat("\n")}
-    bootstrap_info = list(b_samples = bootstrap_rep,
-                           cp_freq = cp_freq,
-                           symdiff_boot = symdiff_boot,
-                           rand_boot = rand_boot,
-                           jaccard_boot = jaccard_boot,
-                           ncp_boot = ncp_boot)
+
+    bootstrap_info = list(bootstrap_samples = bootstrap_samples,
+                          cp_frequency = cp_frequency,
+                          symdiff_values = symdiff_values,
+                          randindex_values = randindex_values,
+                          jaccard_values = jaccard_values,
+                          ncp_values = ncp_values)
 
     model$bootstrap_info = bootstrap_info
   }else{model$bootstrap_info = NULL}

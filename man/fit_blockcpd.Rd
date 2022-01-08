@@ -13,7 +13,7 @@ fit_blockcpd(
   min_block_size = 1L,
   max_blocks = NULL,
   bootstrap = FALSE,
-  bootstrap_rep = 100L,
+  bootstrap_samples = 100L,
   bootstrap_progress = FALSE,
   skip_input_check = FALSE
 )
@@ -79,7 +79,7 @@ respect to the final change point set estimated.}
 
 \item{skip_input_check}{Flag indicating if input checking should be skipped.}
 
-\item{boostrap_rep}{Number of bootstrap repetitions.}
+\item{boostrap_samples}{Number of bootstrap samples.}
 }
 \value{
 The function returns a S3 object of the type blockcpd.
