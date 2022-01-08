@@ -61,20 +61,20 @@ check_input = function(caller, args_to_check){
   }
   #---
 
-  # checks flatplot
+  # checks elbow_plot
   #---
-  if(caller == "flatplot"){
-    blockcpd_args = args_to_check$blockcpd_args
+  if(caller == "elbow_plot"){
+    model_args = args_to_check$model_args
     lambda_left = args_to_check$lambda_left
     lambda_right = args_to_check$lambda_right
     step = args_to_check$step
-    # checks if blockcpd_args is a list
-    if(!is.list(blockcpd_args)){
-      stop("Input error! The 'blockcpd_args' argument must be a list!")
+    # checks if model_args is a list
+    if(!is.list(model_args)){
+      stop("Input error! The 'model_args' argument must be a list!")
     }
     # check if lambda is not in argument list
-    if(("lambda" %in% names(blockcpd_args))||("data_matrix" %in% names(blockcpd_args))){
-      stop("Input error! The 'blockcpd_args' argument must not contain the 'lambda' or 'data_matrix' as a key!")
+    if(("lambda" %in% names(model_args))||("data_matrix" %in% names(model_args))){
+      stop("Input error! The 'model_args' argument must not contain the 'lambda' or 'data_matrix' as a key!")
     }
     # sanity check on lambda_left, lambda_right
     if((lambda_left >= lambda_right)||(lambda_left < 0)){
@@ -83,6 +83,31 @@ check_input = function(caller, args_to_check){
     # sanity check on step
     if(step <= 0){
       stop("Input error! We must have 'step' > 0")
+    }
+  }
+  #---
+
+  # checks confidence_plot
+  if(caller == "confidence_plot"){
+    model = args_to_check$model
+    scale = args_to_check$scale
+    is_index_values_numeric = args_to_check$is_index_values_numeric
+    length_index_values = args_to_check$length_index_values
+    ncol = args_to_check$ncol
+    if(class(model) != "blockcpd"){
+      stop("Input error! The argument 'model' must be blockcpd object!")
+    }
+    if(!model$metadata$bootstrap){
+      stop("Input error! Fit the model using 'bootstrap = TRUE'!")
+    }
+    if(!(scale %in% c("percentage", "probability", "frequency"))){
+      stop("Input error! The argument 'scale' must be one of 'percentage', 'probability' or 'frequency'!")
+    }
+    if(!is_index_values_numeric){
+      stop("Input error! The 'index_values' argument is not a numeric vector!")
+    }
+    if(length_index_values != ncol){
+      stop("Input error! The 'index_values' argument size differs from ncol from the fitted model!")
     }
   }
   #---

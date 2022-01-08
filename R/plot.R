@@ -141,3 +141,55 @@ elbow_plot = function(data_matrix, lambda_left = 0, lambda_right = 10,
 
   invisible(elbow_plot_info)
 }
+
+#' @title
+#' Plot to check reported change-points
+#'
+#' @description
+#' Plots   the estimates of how likely it is for the model to detect a change at
+#' any given point. True change-points should have confidence near $100%$,
+#' while non change-points should have a confidence near $0%$. It might also be
+#' difficult to detect a true change-point at the given sample size. In this
+#' case, it should fluctuate in the middle.
+#' @param model A `blockcpd` model object.
+#' @param scale A string describing the scale which the y-scale should is
+#' plotted. Possible values are "percentage", "probability" and "frequency".
+#' @param index_values A numerical vector of size ncol that contains the values
+#' of the the variable corresponding to the change points.
+#' @param index_variable_name Name of the variable segmented.
+#' @param pkg Graphical package to be used for plotting. Current values are
+#' "base".
+#'
+#' @export
+confidence_plot = function(model, scale = "percentage",
+                           index_values = NULL, index_variable_name = "Index",
+                           pkg = "base"){
+
+  if(is.null(index_values)){index_values = 1:model$metadata$ncol}
+
+  # check input
+  args_to_check = list(model = model,
+                       scale = scale,
+                       is_index_values_numeric = is.numeric(index_values),
+                       length_index_values = length(index_values),
+                       ncol = model$metadata$ncol)
+  do.call(check_input, list(caller = as.character(match.call()[[1]]),
+                            args_to_check = args_to_check))
+
+  scale_multiplier = 1
+  n_samples = model$bootstrap_info$bootstrap_samples
+  if(scale == "percentage"){scale_multiplier = 100/n_samples }
+  if(scale == "probability"){scale_multiplier = 1/n_samples}
+  cp_frequency = model$bootstrap_info$cp_frequency
+  y_values = cp_frequency*scale_multiplier
+  if(pkg == "base"){
+    plot(index_values, y_values,
+         xlab = index_variable_name,
+         ylab = paste0("Detection ", scale),
+         main = paste0("Bootstrap estimated detection ",
+                       scale, " x ", index_variable_name))
+    lines(index_values, y_values)
+    abline(v = model$changepoints, col = "red", lty = "dashed")
+  }
+
+}
