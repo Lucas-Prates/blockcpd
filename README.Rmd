@@ -4,6 +4,7 @@ title: "blockcpd: detecting multiple change-points in multiple signals"
 #- name: Lucas Prates 
 #- name: Florencia Leonardi
 output: github_document
+#rmarkdown::html_vignette
 #vignette: >
 #  %\VignetteIndexEntry{blockcpd_simulation_vign}
 #  %\VignetteEngine{knitr::rmarkdown}
@@ -15,6 +16,9 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+```
+
+```{r setup}
 ```
 
   Welcome to `blockcpd`! This `R` package allows the user to fit change-point 
@@ -53,7 +57,7 @@ devtools::install_github("https://github.com/Lucas-Prates/blockcpd")
 ### Simulating data 
   
   Lets simulate data with $20$ signals (samples), each with variables, segmented 
-  in four intervals: $[1, 50]$, $[51, 120]$, $[121, 180]$ and $[181, 200]$. We 
+  in four intervals: $[1, 50]$, $[51, 110]$, $[111, 180]$ and $[181, 200]$. We 
   consider that the variables from each block comes from a 
   [exponential distribution]{https://en.wikipedia.org/wiki/Exponential_distribution} 
   with scale parameters $1$, $2$, $3$ and $1$ respectively. 
@@ -63,7 +67,7 @@ devtools::install_github("https://github.com/Lucas-Prates/blockcpd")
   the parameter name for the model, and the value is a vector whose entries
   are the value of that parameter for each block. The blocks are specified
   with the `changepoints` argument, which is a vector containing the end point
-  of each block except the last, in our case $(50, 120, 180)$. 
+  of each block except the last, in our case $(50, 110, 180)$. 
   
   We also must specify the statistical family. Currently, the 
   package implements the Normal (Gaussian)  with unknown mean and variance, 
@@ -79,11 +83,27 @@ parameters = list(scale = c(1, 2, 3, 1))
 # ncol = number of variables or observations per signal
 sim_df <- rcpd(nrow = 20, ncol = 200, 
                family = "exponential", parameters = parameters,
-               changepoints = c(50, 120, 180)) 
+               changepoints = c(50, 110, 180)) 
 ```
 
   The output is a list with three elements: the data matrix, the true
   change-points and parameters.
+  
+  The figure below show how the first four signals look like. The vertical
+  dashed lines mark the location of the change-points.
+  
+```{r, echo=FALSE, fig.width=8, fig.height = 7}
+par(mfrow =  c(2, 2))
+plot(sim_df$data_matrix[1, ], ylab = "Signal", main = "Signal 1")
+abline(v = sim_df$changepoints, col = 'red', lty = 'dashed')
+plot(sim_df$data_matrix[2, ], ylab = "Signal", main = "Signal 2")
+abline(v = sim_df$changepoints, col = 'red', lty = 'dashed')
+plot(sim_df$data_matrix[3, ], ylab = "Signal", main = "Signal 3")
+abline(v = sim_df$changepoints, col = 'red', lty = 'dashed')
+plot(sim_df$data_matrix[4, ], ylab = "Signal", main = "Signal 4")
+abline(v = sim_df$changepoints, col = 'red', lty = 'dashed')
+par(mfrow =  c(1, 1))
+```
 
 ### Fitting the model 
 
@@ -117,11 +137,35 @@ sim_df <- rcpd(nrow = 20, ncol = 200,
   `plot` and passing the model as an argument. 
   
 ```{r, fig.width=8, fig.height = 4}
-  plot(seg_model)
+  plot(seg_model, parameter = "scale")
 ```
+ 
+  The flat regions corresponds to variables grouped in the same block. The
+  height of the block corresponds to the estimated value of the parameter for
+  that block. The vertical lines shows where the model detected a change-point.
+  In this example, it detected the changes at $(50, 110, 180)$, which 
+  are the also true change-points.
   
-  The user wants to plot the parameter against the variable directly, passing
-  the variable values and name.
+  Since the scale parameter is associated with the expected value of the 
+  variables for the exponential distribution, we could plot a "average signal"
+  along with the block plot, as show in the figure below.
+  
+```{r, echo=FALSE, fig.width=8, fig.height = 4}
+  mean_signal = apply(sim_df$data_matrix, 2, mean)
+  blockcpd_obj = seg_model
+  ncp = blockcpd_obj$ncp
+  changepoints = blockcpd_obj$changepoints
+  parameter_vec = blockcpd_obj$parameters[["scale"]]
+  sf = stepfun((1:200)[changepoints], parameter_vec)
+  plot(sf, xlim = c(1, 200), do.points = F, xaxs = "i",
+       xlab = "Index", ylab = "Scale (Average)",
+       ylim = c(0, max(mean_signal) + 1),
+       main = paste("Block plot along with 'average signal'"))
+  points(mean_signal, col = 'blue')
+```
+
+  The black lines are the estimated scale (average value) parameter for 
+  the blocks, and the blue points are the average signal for each index.
   
 ### Avoiding over-segmentation
 
@@ -152,11 +196,9 @@ sim_df <- rcpd(nrow = 20, ncol = 200,
   lambda_right = 5
   step = 0.5 # distance between lambda values
   
-  # creates the plot and does not return output
-  elbow_plot(sim_df$data_matrix, lambda_left = lambda_left,
-             lambda_right = lambda_right, step = step,
-             model_args = model_args)
   # creates the plot and returns output related to the plot 
+  # If no return value is passed (no 'ep_info' on the left), then it only
+  # plots 
   ep_info = elbow_plot(sim_df$data_matrix, lambda_left = lambda_left,
                        lambda_right = lambda_right, step = step,
                        model_args = model_args)
@@ -210,10 +252,9 @@ sim_df <- rcpd(nrow = 20, ncol = 200,
   change-points. 
   
   In this example, it is strongly suggested that $50$ and $180$
-  are true change-points, but $120$ also has a high detection value near $70$%.
-  Notice that the index $1$ was detected around $20$% of the time, which is due
-  to chance. If we collected more signals, this value would increasingly 
-  approach $0$.
+  are true change-points, but $110$ also has a high detection value near $70$%.
+  Notice that the index $1$ was detected around $25$% of the time, which is due
+  to chance. If we collected more signals, this value would approach $0$%.
 
 ### Recommendation for datasets with large number of variables
   

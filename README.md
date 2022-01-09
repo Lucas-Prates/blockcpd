@@ -40,7 +40,7 @@ devtools::install_github("https://github.com/Lucas-Prates/blockcpd")
 ### Simulating data
 
 Lets simulate data with 20 signals (samples), each with variables,
-segmented in four intervals: \[1,50\], \[51,120\], \[121,180\] and
+segmented in four intervals: \[1,50\], \[51,110\], \[111,180\] and
 \[181,200\]. We consider that the variables from each block comes from a
 \[exponential
 distribution\]{<https://en.wikipedia.org/wiki/Exponential_distribution>}
@@ -51,7 +51,7 @@ package. To pass the parameters, provide a list, where the keys are the
 parameter name for the model, and the value is a vector whose entries
 are the value of that parameter for each block. The blocks are specified
 with the `changepoints` argument, which is a vector containing the end
-point of each block except the last, in our case (50,120,180).
+point of each block except the last, in our case (50,110,180).
 
 We also must specify the statistical family. Currently, the package
 implements the Normal (Gaussian) with unknown mean and variance,
@@ -67,11 +67,16 @@ parameters = list(scale = c(1, 2, 3, 1))
 # ncol = number of variables or observations per signal
 sim_df <- rcpd(nrow = 20, ncol = 200, 
                family = "exponential", parameters = parameters,
-               changepoints = c(50, 120, 180)) 
+               changepoints = c(50, 110, 180)) 
 ```
 
 The output is a list with three elements: the data matrix, the true
 change-points and parameters.
+
+The figure below show how the first four signals look like. The vertical
+dashed lines mark the location of the change-points.
+
+![](README_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
 
 ### Fitting the model
 
@@ -107,13 +112,25 @@ The user can plot how a parameter varies with the indices just by
 calling `plot` and passing the model as an argument.
 
 ``` r
-  plot(seg_model)
+  plot(seg_model, parameter = "scale")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
 
-The user wants to plot the parameter against the variable directly,
-passing the variable values and name.
+The flat regions corresponds to variables grouped in the same block. The
+height of the block corresponds to the estimated value of the parameter
+for that block. The vertical lines shows where the model detected a
+change-point. In this example, it detected the changes at (50,110,180),
+which are the also true change-points.
+
+Since the scale parameter is associated with the expected value of the
+variables for the exponential distribution, we could plot a “average
+signal” along with the block plot, as show in the figure below.
+
+![](README_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+
+The black lines are the estimated scale (average value) parameter for
+the blocks, and the blue points are the average signal for each index.
 
 ### Avoiding over-segmentation
 
@@ -145,17 +162,15 @@ passed as a list, and the constant value should *not* be included.
   lambda_right = 5
   step = 0.5 # distance between lambda values
   
-  # creates the plot and does not return output
-  elbow_plot(sim_df$data_matrix, lambda_left = lambda_left,
-             lambda_right = lambda_right, step = step,
-             model_args = model_args)
   # creates the plot and returns output related to the plot 
+  # If no return value is passed (no 'ep_info' on the left), then it only
+  # plots 
   ep_info = elbow_plot(sim_df$data_matrix, lambda_left = lambda_left,
                        lambda_right = lambda_right, step = step,
                        model_args = model_args)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
 
 A simple function call plots the result. If the user passes a variable
 for assignment, the function returns additional information. The
@@ -201,17 +216,16 @@ fitted model.
   confidence_plot(seg_model, scale = "percentage")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
 
 The plot shows the detection percentage of each index as a change-point.
 The dashed vertical red lines shows the location of the final detected
 change-points.
 
 In this example, it is strongly suggested that 50 and 180 are true
-change-points, but 120 also has a high detection value near 70%. Notice
-that the index 1 was detected around 20% of the time, which is due to
-chance. If we collected more signals, this value would increasingly
-approach 0.
+change-points, but 110 also has a high detection value near 70%. Notice
+that the index 1 was detected around 25% of the time, which is due to
+chance. If we collected more signals, this value would approach 0%.
 
 ### Recommendation for datasets with large number of variables
 
