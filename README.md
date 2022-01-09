@@ -42,8 +42,8 @@ devtools::install_github("https://github.com/Lucas-Prates/blockcpd")
 Lets simulate data with 20 signals (samples), each with variables,
 segmented in four intervals: \[1,50\], \[51,110\], \[111,180\] and
 \[181,200\]. We consider that the variables from each block comes from a
-\[exponential
-distribution\]{<https://en.wikipedia.org/wiki/Exponential_distribution>}
+[exponential
+distribution](https://en.wikipedia.org/wiki/Exponential_distribution)
 with scale parameters 1, 2, 3 and 1 respectively.
 
 To simulate from this model, we use the `rcpd` function provided by the
@@ -138,7 +138,7 @@ In order to avoid over segmentation, two parameters can be used: the
 penalization constant (the `lambda` argument in `fit_blockcpd`) and the
 maximum number of blocks (the `max_blocks` argument).
 
-If we used 0.1 as the penalization constant, we would have detected 89
+If we used 0.1 as the penalization constant, we would have detected 86
 blocks, a clear over-segmentation! However, we only know it would be a
 over-segmentation because we simulated the data. We need an data-driven
 approach to select lambda.
