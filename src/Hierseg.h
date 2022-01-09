@@ -5,13 +5,23 @@
 #include "Blockcpd.h"
 using namespace Rcpp;
 
-// Auxiliar data structure for fitting binary split iteratively
-typedef struct{
+//---
+// Auxiliary data structure for fitting binary split iteratively
+// It contains the information that goes to the priority queue.
+class bs_node{
+public:
   unsigned int split_index;
   unsigned int left, right;
-  float nll_gain; // negative log likelihood
-  float loss_gain;
-} bs_node;
+  float nll_reduction; // negative log likelihood
+  float loss_reduction;
+};
+
+
+// overload for '<' operator to correctly compare nodes
+inline bool operator<(const bs_node& node1, const bs_node& node2){
+ return node1.loss_reduction < node2.loss_reduction;
+}
+//---
 
 // Class used to fit the data using the hierarchical algorithm. Inherits from
 // Blockcpd, which provides the members and methods of the statistical model.
@@ -29,7 +39,11 @@ public:
   // point set. Then, it calls fit_family_parameters.
   void fit_hierseg();
 
-  bs_node* get_best_split(unsigned int left_index,
+  // Auxiliary function for fitting methods
+  // Given the end points of the search interval, it returns a bs_node object
+  // containing the required information for fitting the binary segmentation
+  // iteratively
+  bs_node get_best_split(unsigned int left_index,
                           unsigned int right_index);
 
   // FITS -> Change point set
@@ -41,10 +55,12 @@ public:
                     const float& current_nll,
                     const float& current_loss);
 
-   // FITS -> Change point set
+  // FITS -> Change point set
   // Iterative implementation of the hierarchical algorithm
-  // Perform calculations, selection best splitting indexes and appending to
-  // the change point set of the stats model
+  // Uses a priority queue of bs_node so that change-points are added by a
+  // measure of the loss reduction. This allows objective usage of the
+  // max_blocks argument, as it guarantees that the added change-points are the
+  // "best"
   void binary_split_iter(const float& unsplit_nll,
                          const float& unsplit_loss);
 };
