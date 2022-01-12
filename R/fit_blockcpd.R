@@ -97,7 +97,7 @@ fit_blockcpd = function(data_matrix,
                          ncol = ncol,
                          min_block_size = min_block_size,
                          lambda = lambda)
-    do.call(check_input, list(caller = as.character(match.call()[[1]]),
+    do.call(check_input, list(caller = "fit_blockcpd",
                               args_to_check = args_to_check))
   }
   if(is.null(max_blocks)){max_blocks = ncol}

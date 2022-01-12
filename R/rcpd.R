@@ -64,8 +64,7 @@ rcpd = function(nrow = 100,
                        changepoints = changepoints,
                        family = family,
                        IMPLEMENTED_FAMILIES = IMPLEMENTED_FAMILIES)
-  do.call(check_input, list(caller = as.character(match.call()[[1]]),
-                            args_to_check = args_to_check))
+  do.call(check_input, list(caller = "rcpd", args_to_check = args_to_check))
 
   if (is.null(changepoints)) {
     if(family == "binaryMarkov"){

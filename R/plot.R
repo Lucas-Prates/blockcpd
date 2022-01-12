@@ -35,7 +35,7 @@ plot.blockcpd = function(blockcpd_obj, parameter = NULL,
                        is_index_values_numeric = is.numeric(index_values),
                        length_index_values = length(index_values),
                        ncol = ncol)
-  do.call(check_input, list(caller = as.character(match.call()[[1]]),
+  do.call(check_input, list(caller = "plot.blockcpd",
                             args_to_check = args_to_check))
 
   ncp = blockcpd_obj$ncp
@@ -91,7 +91,7 @@ elbow_plot = function(data_matrix, lambda_left = 0, lambda_right = 10,
                        lambda_left = lambda_left,
                        lambda_right = lambda_right,
                        step = step)
-  do.call(check_input, list(caller = as.character(match.call()[[1]]),
+  do.call(check_input, list(caller = "elbow_plot",
                             args_to_check = args_to_check))
 
 
@@ -175,7 +175,7 @@ confidence_plot = function(model, scale = "percentage",
                        is_index_values_numeric = is.numeric(index_values),
                        length_index_values = length(index_values),
                        ncol = model$metadata$ncol)
-  do.call(check_input, list(caller = as.character(match.call()[[1]]),
+  do.call(check_input, list(caller = "confidence_plot",
                             args_to_check = args_to_check))
 
   scale_multiplier = 1
