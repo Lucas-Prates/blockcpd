@@ -43,9 +43,11 @@ plot.blockcpd = function(blockcpd_obj, parameter = NULL,
   parameter_vec = blockcpd_obj$parameters[[parameter]]
   if(pkg == "base"){
     sf = stepfun(index_values[changepoints], parameter_vec)
-    plot(sf, xlim = c(index_values[1], index_values[ncol]), do.points = F, xaxs = "i",
+    plot(sf, xlim = c(index_values[1], index_values[ncol]), do.points = F,
+         xaxs = "i", verticals = F,
          xlab = index_variable_name, ylab = parameter,
          main = paste("Block plot for", parameter, "parameter"))
+    abline(v = blockcpd_obj$changepoints, col = "red", lty = "dashed")
   }
 
 }
