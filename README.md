@@ -175,7 +175,7 @@ passed as a list, and the constant value should *not* be included.
 A simple function call plots the result. If the user passes a variable
 for assignment, the function returns additional information. The
 function also makes an “educated guess” on the value of the constant, in
-this case 1.5, justifying the value we used on the beginning. **Do not
+this case 1, justifying the value we used on the beginning. **Do not
 restrict yourself to the suggestion, specially for very small values of
 step.**
 
@@ -223,9 +223,10 @@ The dashed vertical red lines shows the location of the final detected
 change-points.
 
 In this example, it is strongly suggested that 50 and 180 are true
-change-points, but 110 also has a high detection value near 70%. Notice
-that the index 1 was detected around 25% of the time, which is due to
-chance. If we collected more signals, this value would approach 0%.
+change-points, but 110 also has a high detection value near 80%. Other
+indices have somewhat low detection rates, suggesting that we indeed
+only have 3 change-points. Notice that this plot can also aid us in
+deciding if a given region has a change-point.
 
 ### Recommendation for datasets with large number of variables
 

@@ -157,11 +157,12 @@ par(mfrow =  c(1, 1))
   changepoints = blockcpd_obj$changepoints
   parameter_vec = blockcpd_obj$parameters[["scale"]]
   sf = stepfun((1:200)[changepoints], parameter_vec)
-  plot(sf, xlim = c(1, 200), do.points = F, xaxs = "i",
+  plot(sf, xlim = c(1, 200), do.points = F, xaxs = "i", verticals = F,
        xlab = "Index", ylab = "Scale (Average)",
        ylim = c(0, max(mean_signal) + 1),
        main = paste("Block plot along with 'average signal'"))
   points(mean_signal, col = 'blue')
+  abline(v = seg_model$changepoints, col = "red", lty = "dashed")
 ```
 
   The black lines are the estimated scale (average value) parameter for 
@@ -207,7 +208,7 @@ par(mfrow =  c(1, 1))
   
   A simple function call plots the result. If the user passes a variable for 
   assignment, the function returns additional information. The function also
-  makes an "educated guess" on the value of the constant, in this case $1.5$, 
+  makes an "educated guess" on the value of the constant, in this case $1$, 
   justifying the value we used on the beginning.
   **Do not restrict yourself to the suggestion, specially for very small values of step.**
   
@@ -252,9 +253,10 @@ par(mfrow =  c(1, 1))
   change-points. 
   
   In this example, it is strongly suggested that $50$ and $180$
-  are true change-points, but $110$ also has a high detection value near $70$%.
-  Notice that the index $1$ was detected around $25$% of the time, which is due
-  to chance. If we collected more signals, this value would approach $0$%.
+  are true change-points, but $110$ also has a high detection value near $80$%.
+  Other indices have somewhat low detection rates, suggesting that we indeed
+  only have $3$ change-points. Notice that this plot can also aid us in deciding 
+  if a given region has a change-point.
 
 ### Recommendation for datasets with large number of variables
   
