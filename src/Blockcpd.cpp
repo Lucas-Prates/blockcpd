@@ -1,5 +1,6 @@
 #include <Rcpp.h>
 #include "Blockcpd.h"
+#include <math.h>
 using namespace Rcpp;
 
 Blockcpd::Blockcpd(String family, const List& suff_stats, Function pen_func,
@@ -55,7 +56,7 @@ float Blockcpd::compute_negloglike(const int& left_index,
     // loglike part that depends on parameters
     loglike = -block_size*log(block_squared_mean - block_mean*block_mean);
     // adding constant part to loglike
-    loglike -= (block_size/2.0)*(log(2*PI) + 1);
+    loglike -= (block_size/2.0)*(log(2*M_PI) + 1);
   }
 
   if(family == "binaryMarkov"){
