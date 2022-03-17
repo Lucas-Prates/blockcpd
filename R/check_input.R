@@ -61,9 +61,9 @@ check_input = function(caller, args_to_check){
   }
   #---
 
-  # checks elbow_plot
+  # checks select_frv
   #---
-  if(caller == "elbow_plot"){
+  if(caller == "select_frv"){
     model_args = args_to_check$model_args
     lambda_left = args_to_check$lambda_left
     lambda_right = args_to_check$lambda_right
@@ -86,6 +86,13 @@ check_input = function(caller, args_to_check){
     }
   }
   #---
+  # checks frv_plot
+  if(caller == "plot.frv"){
+    frv_obj = args_to_check$frv_obj
+    if(class(frv_obj) != "frv"){
+      stop("Input error! The argument 'frv_obj' must be a frv object!")
+    }
+  }
 
   # checks confidence_plot
   if(caller == "confidence_plot"){
