@@ -60,7 +60,7 @@ distributions.
 
 ``` r
 library(blockcpd)
-set.seed(204)
+set.seed(42)
 parameters = list(scale = c(1, 2, 3, 1))
 
 # nrow = number of signals
@@ -95,11 +95,11 @@ We will better discuss the penalization constant and maximum blocks in
 the next section.
 
 Lets fit the model using “hierseg” (default), the “exponential” family,
-penalization constant equals 1 and default default penalization.
+penalization constant equals 1.73 and default penalization.
 
 ``` r
   seg_model = fit_blockcpd(sim_df$data_matrix, family = "exponential", 
-                           lambda = 1)
+                           lambda = 1.73)
 ```
 
 The return object is a S3 class called `blockcpd`. It contains the
@@ -138,10 +138,10 @@ In order to avoid over segmentation, two parameters can be used: the
 penalization constant (the `lambda` argument in `fit_blockcpd`) and the
 maximum number of blocks (the `max_blocks` argument).
 
-If we used 0.1 as the penalization constant, we would have detected 86
-blocks, a clear over-segmentation! However, we only know it would be a
-over-segmentation because we simulated the data. We need an data-driven
-approach to select lambda.
+If we used a very small value for the penalization constant, we would
+have detected many blocks, reaching a over-segmentation! However, we
+only know it would have been a over-segmentation because we simulated
+the data. We need an data-driven approach to select lambda.
 
 The constant has to be chosen carefully. A common approach is to use an
 adaptation of the [elbow
@@ -150,9 +150,13 @@ heuristics. A graphic of how the number of detect blocks varies with the
 penalization constant lambda is constructed, and then we try to visually
 select a value in which the curve “flats out” after it.
 
-The package provides the `elbow_plot` function which constructs the plot
-given the data set and model arguments. The model arguments must be
-passed as a list, and the constant value should *not* be included.
+The package provides the `select_frv` function. The first function uses
+a methodology similar to the described above in order to observe how the
+estimated number of change-points vary with the penalization constant.
+The main advantage is that it provides an automatic suggestion for the
+best regularization constant, number of change-points and model.
+Optionally, the user can call the `plot` function on its output in order
+to do graphical inspection.
 
 ``` r
   model_args = list(family = "exponential") # do not include lambda!
@@ -160,24 +164,24 @@ passed as a list, and the constant value should *not* be included.
   # search space for lambda
   lambda_left = 0
   lambda_right = 5
-  step = 0.5 # distance between lambda values
+  step = "automatic" # can also be set to any numeric value
   
-  # creates the plot and returns output related to the plot 
-  # If no return value is passed (no 'ep_info' on the left), then it only
-  # plots 
-  ep_info = elbow_plot(sim_df$data_matrix, lambda_left = lambda_left,
-                       lambda_right = lambda_right, step = step,
-                       model_args = model_args)
+  # uses the data and passed arguments to fit the curve and suggested values
+  frv = select_frv(sim_df$data_matrix, lambda_left = lambda_left, step = step,
+                   lambda_right = lambda_right, 
+                   model_args = model_args)
+  
+  # plots the curve if the user prefers to perform graphical inspection
+  plot(frv)
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
 
-A simple function call plots the result. If the user passes a variable
-for assignment, the function returns additional information. The
-function also makes an “educated guess” on the value of the constant, in
-this case 1, justifying the value we used on the beginning. **Do not
-restrict yourself to the suggestion, specially for very small values of
-step.**
+The function suggests an approximate value of 1.73 for the penalization
+constant, justifying the value we used on the beginning. Plotting the
+result is optional, but it can aid when the automatic suggestion fails.
+**Do not restrict yourself to the suggestion, specially for very small
+values of step.**
 
 Another way to control over-segmentation is using the `max_blocks`
 argument. When working with a large number of variables, if there is no
@@ -211,7 +215,7 @@ fitted model.
 
 ``` r
   seg_model = fit_blockcpd(sim_df$data_matrix, family = "exponential", 
-                           lambda = 1, 
+                           lambda = frv$suggested_lambda, 
                            bootstrap = TRUE, bootstrap_samples = 200L)
   confidence_plot(seg_model, scale = "percentage")
 ```
@@ -223,7 +227,7 @@ The dashed vertical red lines shows the location of the final detected
 change-points.
 
 In this example, it is strongly suggested that 50 and 180 are true
-change-points, but 110 also has a high detection value near 80%. Other
+change-points, but 110 also has a high detection value near 50%. Other
 indices have somewhat low detection rates, suggesting that we indeed
 only have 3 change-points. Notice that this plot can also aid us in
 deciding if a given region has a change-point.
@@ -231,7 +235,7 @@ deciding if a given region has a change-point.
 ### Recommendation for datasets with large number of variables
 
 To reduce run-time on large datasets, we recommend using the `hierseg`
-method when using `fit_blockcpd` and `elbow_plot`. It is also advisable
+method when using `fit_blockcpd` and `select_frv`. It is also advisable
 to set small values for `max_blocks`, not only for time issues but also
 to avoid over-segmentation.
 
