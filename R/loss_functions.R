@@ -26,7 +26,7 @@ toy_regularization = function(left_index, right_index, nrow, ncol){
 
 # Regular BIC loss
 bic_loss = function(left_index, right_index, nrow, ncol){
-  loss = log(nrow)
+  loss = log(nrow*ncol)
   return(loss)
 }
 
