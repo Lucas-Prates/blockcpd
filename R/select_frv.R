@@ -37,7 +37,7 @@ select_frv = function(data_matrix, lambda_left = 0, lambda_right = 10,
 
   # check input
   if(step == "automatic"){
-    step = 1/sqrt(log(nrow(data_matrix)))
+    step = 1/sqrt(log(nrow(data_matrix) + 1))
   }
   args_to_check = list(model_args = model_args,
                        lambda_left = lambda_left,
