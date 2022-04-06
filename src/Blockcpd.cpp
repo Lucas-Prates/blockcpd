@@ -134,7 +134,11 @@ float Blockcpd::compute_negloglike(const int& left_index,
     }
     rate /= block_size;
     //not including factorial terms that do not depend on the rate
-    loglike = block_size*rate*(log(rate) - 1);
+    if(rate == 0){
+      loglike = 0;
+    } else{
+      loglike = block_size*rate*(log(rate) - 1);
+    }
   }
 
 
