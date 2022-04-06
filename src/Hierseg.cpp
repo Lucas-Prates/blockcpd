@@ -62,7 +62,6 @@ bs_node Hierseg::get_best_split(unsigned int left_index,
 
 
   for(int j = left_index; j < right_index; j++) {
-
     new_left_nll = compute_negloglike(left_index, j);
     //negloglike + regularization
     new_left_loss = new_left_nll + compute_regularization(left_index, j);
@@ -102,8 +101,8 @@ void Hierseg::binary_split_iter(const float& unsplit_nll,
 
   if(search_node.split_index != 0){
     split_queue.push(search_node);
-    loss += search_node.loss_reduction;
-    negloglike += search_node.nll_reduction;
+    loss -= search_node.loss_reduction;
+    negloglike -= search_node.nll_reduction;
   }
 
   // First interval
@@ -126,16 +125,16 @@ void Hierseg::binary_split_iter(const float& unsplit_nll,
                                  curr_node.split_index);
     if(search_node.split_index != 0){
       split_queue.push(search_node);
-      loss += search_node.loss_reduction;
-      negloglike += search_node.nll_reduction;
+      loss -= search_node.loss_reduction;
+      negloglike -= search_node.nll_reduction;
     }
     // search [split_index+1, right)
     search_node = get_best_split(curr_node.split_index + 1,
                                  curr_node.right);
     if(search_node.split_index != 0){
       split_queue.push(search_node);
-      loss += search_node.loss_reduction;
-      negloglike += search_node.nll_reduction;
+      loss -= search_node.loss_reduction;
+      negloglike -= search_node.nll_reduction;
     }
   }
   return;

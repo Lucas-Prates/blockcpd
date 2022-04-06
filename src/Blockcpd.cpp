@@ -39,6 +39,7 @@ float Blockcpd::compute_negloglike(const int& left_index,
   if(family == "normal"){
     double block_mean = 0;
     double block_squared_mean = 0;
+    double block_variance = 0;
     NumericVector col_sum = suff_stats[0];
     NumericVector col_squared_sum = suff_stats[1];
     NumericVector col_samples = suff_stats[2];
@@ -54,9 +55,16 @@ float Blockcpd::compute_negloglike(const int& left_index,
     block_mean /= block_size;
     block_squared_mean /= block_size;
     // loglike part that depends on parameters
-    loglike = -block_size*log(block_squared_mean - block_mean*block_mean);
-    // adding constant part to loglike
-    loglike -= (block_size/2.0)*(log(2*M_PI) + 1);
+    block_variance = block_squared_mean - block_mean*block_mean;
+    if(block_variance == 0){
+      return(INFINITY); // all values are constant in the block, so it is not
+                       // possible to compute the variance. Impossible model.
+    }
+    else{
+      loglike = -block_size*log(block_squared_mean - block_mean*block_mean);
+      // adding constant part to loglike
+      loglike -= (block_size/2.0)*(log(2*M_PI) + 1);
+    }
   }
 
   if(family == "binaryMarkov"){
