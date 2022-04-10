@@ -21,13 +21,13 @@
 #' be passed as a string. The families  currently implemented are:
 #'
 #' \itemize{
-#'  \item{"bernoulli"} The model assumes that data comes from a Bernoulli
+#'  \item "bernoulli": The model assumes that data comes from a Bernoulli
 #'  distribution. For each block, the algorithm estimates the probability
 #'  paramater. Each entry should be binary.
-#'  \item{"normal"} The model assumes data comes fro ma Normal distribution with
+#'  \item "normal": The model assumes data comes fro ma Normal distribution with
 #'  unknown mean and variance. For each block, the algorithms estimates the
 #'  mean and variance parameter. Each entry should be numeric.
-#'  \item{"binaryMarkov"} The model assumes that data comes from two states (0, 1)
+#'  \item "binaryMarkov": The model assumes that data comes from two states (0, 1)
 #'  Markov Chain. For each block, the algorithm estimates the 2x2 transition
 #'  matrix. Each entry should be binary. At the boundary of the blocks, the
 #'  transition is defined using the parameters of the next (new) block. For
@@ -35,10 +35,10 @@
 #'  to b (including the extremes). By definition, c is a change point, and the
 #'  transition from X_c to X_{c} + 1 is defined by the parameters on c + 1 to
 #'  b.
-#'  \item{"exponential"} The model assumes that data comes from an Exponential
+#'  \item "exponential": The model assumes that data comes from an Exponential
 #'  distribution. For each block, the algorithm estimates the scale parameter,
 #'  that is, the inverse of the rate. Each entry should be numeric and positive.
-#'  \item{"poisson"} The model assumes that data comes from a Poisson distribution
+#'  \item "poisson": The model assumes that data comes from a Poisson distribution
 #'  For each block, the algorithm estimates the rate paramater. Each entry
 #'  should an positive integer.
 #' }
@@ -57,7 +57,8 @@
 #' estimation of the probability of each index being detected as a change point.
 #' It also provides a sample of all the metrics implemented computed with
 #' respect to the final change point set estimated.
-#' @param boostrap_samples Number of bootstrap samples.
+#' @param bootstrap_samples Number of bootstrap samples.
+#' @param bootstrap_progress Flag for bootstrap progress printing.
 #' @param skip_input_check Flag indicating if input checking should be skipped.
 #'
 #' @return The function returns a S3 object of the type blockcpd.

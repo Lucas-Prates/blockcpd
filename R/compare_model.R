@@ -6,10 +6,10 @@
 #' another model or ground truth. The comparison is made using common metrics
 #' to compare clusters. The metrics provided are
 #'\itemize{
-#'  \item["hausdorff"] Hausdorff Distance metric;
-#'  \item["rand"] Rand Index ;
-#'  \item["symdiff"] Symmetric difference metric;
-#'  \item["jaccard"] Jaccard similarity index.
+#'  \item "hausdorff": Hausdorff Distance metric;
+#'  \item "rand": Rand Index ;
+#'  \item "symdiff": Symmetric difference metric;
+#'  \item "jaccard": Jaccard similarity index.
 #' }
 #'
 #' @param model1 The first blockcpd object or list of sorted integers

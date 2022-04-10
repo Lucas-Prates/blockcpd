@@ -5,6 +5,8 @@
 #' Performs a sanity check on the inputs from caller. It stops execution and
 #' outputs an error message if arguments are not in conformity with caller
 #' method.
+#' @param caller name of the function that called the check_input.
+#' @param args_to_check list of arguments that will be checked.
 check_input = function(caller, args_to_check){
 
   # checks fit_blockcpd

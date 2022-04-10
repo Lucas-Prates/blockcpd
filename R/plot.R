@@ -42,12 +42,13 @@ plot.blockcpd = function(blockcpd_obj, parameter = NULL,
   changepoints = blockcpd_obj$changepoints
   parameter_vec = blockcpd_obj$parameters[[parameter]]
   if(pkg == "base"){
-    sf = stepfun(index_values[changepoints], parameter_vec)
-    plot(sf, xlim = c(index_values[1], index_values[ncol]), do.points = F,
-         xaxs = "i", verticals = F,
-         xlab = index_variable_name, ylab = parameter,
-         main = paste("Block plot for", parameter, "parameter"))
-    abline(v = blockcpd_obj$changepoints, col = "red", lty = "dashed")
+    sf = stats::stepfun(index_values[changepoints], parameter_vec)
+    stats::plot.stepfun(sf, xlim = c(index_values[1], index_values[ncol]),
+                        do.points = F,
+                        xaxs = "i", verticals = F,
+                        xlab = index_variable_name, ylab = parameter,
+                        main = paste("Block plot for", parameter, "parameter"))
+    graphics::abline(v = blockcpd_obj$changepoints, col = "red", lty = "dashed")
   }
 
 }
@@ -60,6 +61,8 @@ plot.blockcpd = function(blockcpd_obj, parameter = NULL,
 #' estimated by the given model vary with the regularization constant lambda.
 #' Graphical inspection can be used to choose a proper value for the constant.
 #' The suggestion is to pick a value in which the curve starts to "flat-out"
+#' @param frv_obj An object returned from the function
+#' \link[=select_frv]{select_frv}
 #' @param pkg Graphical package to be used for plotting. Current values are
 #' "base".
 #'
@@ -76,10 +79,10 @@ plot.frv = function(frv_obj, pkg = "base"){
     plot(lambda_set, ncp,
          xlab = "lambda", ylab = "Number of change points",
          main = "Number of change points vs penalization constant")
-    lines(lambda_set, ncp)
+    graphics::lines(lambda_set, ncp)
     if(!is.null(suggested_lambda)){
-      abline(v = suggested_lambda, col = 'red', lty = "dashed")
-      abline(h = suggested_ncp, col = 'red', lty = "dashed")
+      graphics::abline(v = suggested_lambda, col = 'red', lty = "dashed")
+      graphics::abline(h = suggested_ncp, col = 'red', lty = "dashed")
     }
   }
 }
@@ -130,8 +133,8 @@ confidence_plot = function(model, scale = "percentage",
          ylab = paste0("Detection ", scale),
          main = paste0("Bootstrap estimated detection ",
                        scale, " vs ", index_variable_name))
-    lines(index_values, y_values)
-    abline(v = model$changepoints, col = "red", lty = "dashed")
+    graphics::lines(index_values, y_values)
+    graphics::abline(v = model$changepoints, col = "red", lty = "dashed")
   }
 
 }

@@ -7,6 +7,9 @@
 \method{plot}{frv}(frv_obj, pkg = "base")
 }
 \arguments{
+\item{frv_obj}{An object returned from the function
+\link[=select_frv]{select_frv}}
+
 \item{pkg}{Graphical package to be used for plotting. Current values are
 "base".}
 }

@@ -23,9 +23,9 @@ Compares or evaluates model estimated change point set against
 another model or ground truth. The comparison is made using common metrics
 to compare clusters. The metrics provided are
 \itemize{
-\item\link{"hausdorff"} Hausdorff Distance metric;
-\item\link{"rand"} Rand Index ;
-\item\link{"symdiff"} Symmetric difference metric;
-\item\link{"jaccard"} Jaccard similarity index.
+\item "hausdorff": Hausdorff Distance metric;
+\item "rand": Rand Index ;
+\item "symdiff": Symmetric difference metric;
+\item "jaccard": Jaccard similarity index.
 }
 }

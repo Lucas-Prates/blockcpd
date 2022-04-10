@@ -27,15 +27,15 @@ It is overridden if changepoints is non-NULL.}
 implemented are:
 
 \itemize{
-\item\link{bernoulli} Sample independent Bernoullis with probability parameter
+\item bernoulli: Sample independent Bernoullis with probability parameter
 of the block
-\item\link{normal} Sample independent Normal with mean and variance specified
+\item normal: Sample independent Normal with mean and variance specified
 by the block.
-\item\link{binaryMarkov} Samples a two state Markov Chain process with transition
+\item binaryMarkov: Samples a two state Markov Chain process with transition
 matrix defined by the block.
-\item\link{exponential} Sample independent Exponential with scale parameter
+\item exponential: Sample independent Exponential with scale parameter
 defined by the block.
-\item\link{poisson} Sample independent Poisson with rate parameter defined
+\item poisson: Sample independent Poisson with rate parameter defined
 by the block.
 }}
 

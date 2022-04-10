@@ -6,14 +6,23 @@
 \usage{
 toy_regularization(left_index, right_index, nrow, ncol)
 }
+\arguments{
+\item{left_index}{First index of the interval}
+
+\item{right_index}{Last index of the interval}
+
+\item{nrow}{Number of rows/signals/series}
+
+\item{ncol}{Number of columns/variables}
+}
 \description{
 The estimator in this package computes the optimum of
 \eqn{-l(C, p) + \lambda*R(leftIndex, rightIndex, nrow, ncol)}, where l is the
 log likelihood of the family, lambda is the penalization constant and R
 is the regularization function. The user can create his own regularization
-function and pass as an argument to \link[fit_blockcpd]{fit_blockcpd}. It
-should have four arguments, in the following order: leftIndex, rightIndex,
-nrow (the sample size) and ncol (the number variables).
+function and pass as an argument to \link[=fit_blockcpd]{fit_blockcpd}. It
+should have four arguments, in the following order: left_index, right_index,
+nrow and ncol. Each argument is explained in the parameter section.
 If the function depends on leftIndex and rightIndex, it will be
 non-homogeneous, which might be interesting in some applications.
 The package implements some functions as an example, but uses only

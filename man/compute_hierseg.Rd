@@ -33,6 +33,10 @@ size and ncol the number of variables/columns.}
 
 \item{min_block_size}{Minimum block size allowed. Default is 0, and the value
 must be smaller or equal to ncol.}
+
+\item{max_blocks}{Threshold on the number of block segments to fit the model.
+Set low values for this parameters if having performance issues on large
+data sets.}
 }
 \description{
 Uses binary splitting to obtain a greedy soltuion to the regularized loss

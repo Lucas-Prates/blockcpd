@@ -67,7 +67,6 @@ compute_jaccard <- function(cp1, cp2) {
     .Call(`_blockcpd_compute_jaccard`, cp1, cp2)
 }
 
-#' Sampler for depedent models
 rcpd_cpp <- function(family, n, m, changepoints, parameters) {
     .Call(`_blockcpd_rcpd_cpp`, family, n, m, changepoints, parameters)
 }

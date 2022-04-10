@@ -6,6 +6,11 @@
 \usage{
 check_input(caller, args_to_check)
 }
+\arguments{
+\item{caller}{name of the function that called the check_input.}
+
+\item{args_to_check}{list of arguments that will be checked.}
+}
 \description{
 Performs a sanity check on the inputs from caller. It stops execution and
 outputs an error message if arguments are not in conformity with caller

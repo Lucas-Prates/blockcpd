@@ -17,6 +17,9 @@
 #'   size and ncol the number of variables/columns.
 #' @param min_block_size Minimum block size allowed. Default is 0, and the value
 #' must be smaller or equal to ncol.
+#' @param max_blocks Threshold on the number of block segments to fit the model.
+#' Set low values for this parameters if having performance issues on large
+#' data sets.
 compute_hierseg = function(suff_stats,
                            family,
                            lambda = 1,
@@ -40,7 +43,7 @@ compute_hierseg = function(suff_stats,
                                   ncol = ncol,
                                   min_block_size = min_block_size,
                                   max_blocks = max_blocks,
-                                  pen_fun = hs_pen_function,
+                                  pen_func = hs_pen_function,
                                   algorithm_type = "iterative")
 
   model_info = list(changepoints = hs_output[[1]],

@@ -25,15 +25,15 @@ generate_na = function(n_samples, prob){
 #' implemented are:
 #'
 #' \itemize{
-#'  \item[bernoulli] Sample independent Bernoullis with probability parameter
+#'  \item bernoulli: Sample independent Bernoullis with probability parameter
 #'  of the block
-#'  \item[normal] Sample independent Normal with mean and variance specified
+#'  \item normal: Sample independent Normal with mean and variance specified
 #'  by the block.
-#'  \item[binaryMarkov] Samples a two state Markov Chain process with transition
+#'  \item binaryMarkov: Samples a two state Markov Chain process with transition
 #'  matrix defined by the block.
-#'  \item[exponential] Sample independent Exponential with scale parameter
+#'  \item exponential: Sample independent Exponential with scale parameter
 #'  defined by the block.
-#'  \item[poisson] Sample independent Poisson with rate parameter defined
+#'  \item poisson: Sample independent Poisson with rate parameter defined
 #'  by the block.
 #' }
 #' @param parameters List of parameters containing \eqn{ncp + 1} dimensional
