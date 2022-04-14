@@ -4,11 +4,11 @@ title: "blockcpd: detecting multiple change-points in multiple signals"
 #- name: Lucas Prates 
 #- name: Florencia Leonardi
 output: github_document
-#rmarkdown::html_vignette
-#vignette: >
-#  %\VignetteIndexEntry{blockcpd_simulation_vign}
-#  %\VignetteEngine{knitr::rmarkdown}
-#  %\VignetteEncoding{UTF-8}
+#  rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{blockcpd_simulation_vign}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r, include = FALSE}

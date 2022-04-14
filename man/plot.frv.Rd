@@ -4,11 +4,13 @@
 \alias{plot.frv}
 \title{Plot for graphical selection of the constant}
 \usage{
-\method{plot}{frv}(frv_obj, pkg = "base")
+\method{plot}{frv}(x, ..., pkg = "base")
 }
 \arguments{
-\item{frv_obj}{An object returned from the function
+\item{x}{An object returned from the function
 \link[=select_frv]{select_frv}}
+
+\item{...}{Other parameters}
 
 \item{pkg}{Graphical package to be used for plotting. Current values are
 "base".}

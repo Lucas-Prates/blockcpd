@@ -2,7 +2,7 @@
 
 using namespace Rcpp;
 
-//' Sampler for depedent models
+// Sampler for depedent models
 //[[Rcpp::export]]
 NumericMatrix rcpd_cpp(String family,
               int n,

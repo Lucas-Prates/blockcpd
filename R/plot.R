@@ -4,7 +4,7 @@
 #' @description
 #' Plots the selected parameters in a blocked fashion.
 #'
-#' @param blockcpd_obj A fitted blockcpd S3 object provided by the
+#' @param x A fitted blockcpd S3 object provided by the
 #' \link[=fit_blockcpd]{fit_blockcpd} function.
 #' @param parameter The parameter of the family for which to plot the blocked
 #' @param index_values A numerical vector of size ncol that contains the values
@@ -15,11 +15,13 @@
 #' @param index_variable_name Name of the variable segmented.
 #' @param pkg Graphical package to be used for plotting. Current values are
 #' "base".
-#'
+#' @param ... Other parameters
+#' @rdname plot.blockcpd
 #' @export
-plot.blockcpd = function(blockcpd_obj, parameter = NULL,
+plot.blockcpd = function(x, ..., parameter = NULL,
                          index_values = NULL, index_variable_name = "Index",
                          pkg = "base"){
+  blockcpd_obj = x
   # check if parameter argument is in family parameter list
   if(is.null(parameter)){
     parameter = names(blockcpd_obj$parameters)[1]
@@ -61,13 +63,15 @@ plot.blockcpd = function(blockcpd_obj, parameter = NULL,
 #' estimated by the given model vary with the regularization constant lambda.
 #' Graphical inspection can be used to choose a proper value for the constant.
 #' The suggestion is to pick a value in which the curve starts to "flat-out"
-#' @param frv_obj An object returned from the function
+#' @param x An object returned from the function
 #' \link[=select_frv]{select_frv}
 #' @param pkg Graphical package to be used for plotting. Current values are
 #' "base".
-#'
+#' @param ... Other parameters
+#' @rdname plot.frv
 #' @export
-plot.frv = function(frv_obj, pkg = "base"){
+plot.frv = function(x, ..., pkg = "base"){
+  frv_obj = x
   args_to_check = list(frv_obj = frv_obj)
   do.call(check_input, list(caller = "plot.frv",
                             args_to_check = args_to_check))

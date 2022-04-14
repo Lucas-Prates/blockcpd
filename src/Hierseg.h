@@ -43,8 +43,8 @@ public:
   // Given the end points of the search interval, it returns a bs_node object
   // containing the required information for fitting the binary segmentation
   // iteratively
-  bs_node get_best_split(unsigned int left_index,
-                          unsigned int right_index);
+  bs_node get_best_split(const int& left_index,
+                         const int& right_index);
 
   // FITS -> Change point set
   // Recursive implementation of the hierarchical algorithm

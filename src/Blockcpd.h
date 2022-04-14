@@ -16,11 +16,11 @@ public:
   List suff_stats; // list of sufficient statistics for the family
   Function pen_func; // penalization function defined by user
   int ncol;
+  int min_block_size;
+  int max_blocks;
   std::vector<int> changepoints;
   float loss; // total regularized loss function for the estimated model
   float negloglike; // total negative log-likelihood
-  int min_block_size;
-  int max_blocks;
   List parameters;
 
   Blockcpd(String family, const List& suff_stats,

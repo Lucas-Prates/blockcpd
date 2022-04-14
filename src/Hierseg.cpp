@@ -29,8 +29,8 @@ void Hierseg::fit_hierseg(){
 }
 
 // Auxiliary function
-bs_node Hierseg::get_best_split(unsigned int left_index,
-                                 unsigned int right_index){
+bs_node Hierseg::get_best_split(const int& left_index,
+                                const int& right_index){
   Rcpp::checkUserInterrupt(); // check user interruption in rcpp
   float initial_nll = compute_negloglike(left_index, right_index);
   float initial_loss = initial_nll + compute_regularization(left_index, right_index);
@@ -38,7 +38,7 @@ bs_node Hierseg::get_best_split(unsigned int left_index,
   float right_loss = initial_loss;
   float left_nll = 0;
   float right_nll = initial_nll;
-  unsigned int split_index = 0;
+  int split_index = 0;
   float new_left_loss, new_right_loss;
   float new_left_nll, new_right_nll; //left and right negloglike
   bs_node node;
@@ -92,6 +92,7 @@ void Hierseg::binary_split_iter(const float& unsplit_nll,
   // they are class attributes
   negloglike = unsplit_nll;
   loss = unsplit_loss;
+  int n_changepoints = 0;
 
   // Setting up data structure
   std::priority_queue<bs_node> split_queue;
@@ -110,10 +111,11 @@ void Hierseg::binary_split_iter(const float& unsplit_nll,
     // add split index to change points and remove from queue
     curr_node = split_queue.top();
     changepoints.push_back(curr_node.split_index);
+    n_changepoints++;
     split_queue.pop();
 
     // halt condition
-    if(changepoints.size() >= max_blocks){
+    if(n_changepoints >= max_blocks){
       // empties queue
       while(!split_queue.empty()){split_queue.pop();}
       return;

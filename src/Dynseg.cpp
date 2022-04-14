@@ -17,7 +17,7 @@ void Dynseg::fit_dynseg(){
   negloglike = loss;
   if(changepoints.size() > 0){
     negloglike -= *REAL(pen_func(1, changepoints[0]));
-    for(int i = 0; i < changepoints.size() - 1; i++){
+    for(unsigned int i = 0; i < changepoints.size() - 1; i++){
       negloglike -= *REAL(pen_func(changepoints[i] + 1, changepoints[i + 1]));
     }
     negloglike -= *REAL(pen_func(changepoints[changepoints.size()] + 1, ncol));
