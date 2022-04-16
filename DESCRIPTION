@@ -1,5 +1,5 @@
 Package: blockcpd
-Title: Change point detection for several indepedent time series
+Title: Change point detection for multiple aligned independent time series
 Version: 1.0.0
 Authors@R: 
     c(person(given = "Lucas",
@@ -15,9 +15,9 @@ Authors@R:
     )
 Description: The blockcpd package implements statistical models based on 
     regularized likelihood to perform offline change point detection when working
-    with multiple independent time series. It detects changes in parameters for the
-    specified family, so in a sense it detects "blocks of random variables" which
-    have the same parameter.
+    with multiple aligned independent time series. It detects changes in 
+    parameters for the specified family, so in a sense it detects 
+    "blocks of random variables" which have the same parameter.
 License: GPL (>= 2)
 Encoding: UTF-8
 LazyData: true

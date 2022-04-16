@@ -67,7 +67,7 @@ float compute_rand(IntegerVector cp1,
 
   return(1 - M);
 
-};
+}
 
 
 //' @title

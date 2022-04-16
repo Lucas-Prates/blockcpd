@@ -28,14 +28,14 @@ compare_model = function(model1,
   blockcpd_flag = FALSE # flag for blockcpd object
 
   # Model 1 setup
-  if (class(model1) == "blockcpd"){
+  if (inherits(model1 ,"blockcpd")){
     ncol = model1$metadata$ncol
     cp1 = model1$changepoints
     blockcpd_flag = TRUE
   } else {cp1 = model1} # cp1 must be a change point set
 
   # Model 2 setup
-  if (class(model2) == "blockcpd"){
+  if (inherits(model2, "blockcpd")){
     ncol = model2$metadata$ncol
     cp2 = model2$changepoints
     blockcpd_flag = TRUE
