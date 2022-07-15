@@ -1,5 +1,5 @@
 Package: blockcpd
-Title: Change point detection for multiple aligned independent time series
+Title: Change Point Detection For Multiple Aligned Independent Time Series
 Version: 1.0.0
 Authors@R: 
     c(person(given = "Lucas",

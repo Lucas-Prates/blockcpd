@@ -46,4 +46,4 @@ void TriangularMatrix<T>::set_value(double value, int i, int j){
     throw std::invalid_argument("TriangularMatrix: accessing value out of range");
   }
   tmat[offset + j - i] = value;
-};
+}

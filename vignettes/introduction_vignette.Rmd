@@ -46,7 +46,7 @@ knitr::opts_chunk$set(
 ## Installation
 
   To install the package from this repository, install the
-[devtools](https://cran.r-project.org/web/packages/devtools/index.html) package 
+[devtools](https://CRAN.R-project.org/package=devtools) package 
 and run the command below.
   
 ```{r eval = FALSE}
