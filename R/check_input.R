@@ -88,10 +88,10 @@ check_input = function(caller, args_to_check){
     }
   }
   #---
-  # checks frv_plot
+  # checks frv.plot
   if(caller == "plot.frv"){
     frv_obj = args_to_check$frv_obj
-    if(class(frv_obj) != "frv"){
+    if(!inherits(frv_obj, "frv")){
       stop("Input error! The argument 'frv_obj' must be a frv object!")
     }
   }
@@ -103,7 +103,7 @@ check_input = function(caller, args_to_check){
     is_index_values_numeric = args_to_check$is_index_values_numeric
     length_index_values = args_to_check$length_index_values
     ncol = args_to_check$ncol
-    if(class(model) != "blockcpd"){
+    if(!inherits(model, "blockcpd")){
       stop("Input error! The argument 'model' must be blockcpd object!")
     }
     if(!model$metadata$bootstrap){
