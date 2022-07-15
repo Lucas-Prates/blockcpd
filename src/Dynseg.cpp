@@ -1,6 +1,6 @@
 #include <Rcpp.h>
 #include "Dynseg.h"
-#include <unistd.h>
+#include "TriangularMatrix.h"
 using namespace Rcpp;
 
 Dynseg::Dynseg(String family, const List& suff_stats, Function pen_func,

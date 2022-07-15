@@ -1,15 +1,13 @@
 #include <Rcpp.h>
+#include "TriangularMatrix.h"
 using namespace Rcpp;
+
+template class TriangularMatrix<int>;
+template class TriangularMatrix<double>;
 
 // Triangular matrix struct used in the dynamical programming algorithm
 template <typename T>
-class TriangularMatrix{
-public:
-  int nrow, ncol;
-  int total_size;
-  std::vector<T> tmat;
-
-  TriangularMatrix(int nrow, int ncol)
+TriangularMatrix<T>::TriangularMatrix(int nrow, int ncol)
     : nrow(nrow), ncol(ncol)
   {
     if(nrow > ncol){
@@ -20,34 +18,32 @@ public:
     tmat = aux_T;
   }
 
-  double get_value(int i, int j){
-    if(i > nrow){
-      throw std::invalid_argument("TriangularMatrix: i > nrow, acessing non-existing row");
-    }
-    if(j < i){
-      throw std::invalid_argument("TriangularMatrix: j must be greater or equal to i");
-    }
-    int offset = (ncol + 1)*i - (i*(i + 1))/2;
-    if(offset + j - i > total_size){
-      printf("TriangularMatrix: index_sum: %d, total_size: %d\n", offset + j - i, total_size);
-      throw std::invalid_argument("TriangularMatrix: accessing value out of range");
-    }
-    return(tmat[offset + j - i]);
+template <typename T>
+double TriangularMatrix<T>::get_value(int i, int j){
+  if(i > nrow){
+    throw std::invalid_argument("TriangularMatrix: i > nrow, acessing non-existing row");
   }
-
-  void set_value(double value, int i, int j){
-    if(i > nrow){
-      throw std::invalid_argument("TriangularMatrix: i > nrow, acessing non-existing row");
-    }
-    if(j < i){
-      throw std::invalid_argument("TriangularMatrix: j must be greater or equal to i");
-    }
-    int offset = (ncol + 1)*i - (i*(i + 1))/2;
-    if(offset + j - i > total_size){
-      printf("TriangularMatrix: index_sum: %d, total_size: %d\n", offset + j - i, total_size);
-      throw std::invalid_argument("TriangularMatrix: accessing value out of range");
-    }
-    tmat[offset + j - i] = value;
+  if(j < i){
+    throw std::invalid_argument("TriangularMatrix: j must be greater or equal to i");
   }
+  int offset = (ncol + 1)*i - (i*(i + 1))/2;
+  if(offset + j - i > total_size){
+    throw std::invalid_argument("TriangularMatrix: accessing value out of range");
+  }
+  return(tmat[offset + j - i]);
+}
 
-  };
+template <typename T>
+void TriangularMatrix<T>::set_value(double value, int i, int j){
+  if(i > nrow){
+    throw std::invalid_argument("TriangularMatrix: i > nrow, acessing non-existing row");
+  }
+  if(j < i){
+    throw std::invalid_argument("TriangularMatrix: j must be greater or equal to i");
+  }
+  int offset = (ncol + 1)*i - (i*(i + 1))/2;
+  if(offset + j - i > total_size){
+    throw std::invalid_argument("TriangularMatrix: accessing value out of range");
+  }
+  tmat[offset + j - i] = value;
+};

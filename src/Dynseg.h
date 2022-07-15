@@ -2,7 +2,7 @@
 #define DYNSEG_H
 
 #include <Rcpp.h>
-#include "TriangularMatrix.cpp"
+#include "TriangularMatrix.h"
 #include "Blockcpd.h"
 using namespace Rcpp;
 
