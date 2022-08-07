@@ -93,7 +93,7 @@ sim_df <- rcpd(nrow = 20, ncol = 200,
   dashed lines mark the location of the change-points.
   
 ```{r, echo=FALSE, fig.width=8, fig.height = 7}
-par(mfrow =  c(2, 2))
+old_par_config = par(mfrow =  c(2, 2))
 plot(sim_df$data_matrix[1, ], ylab = "Signal", main = "Signal 1")
 abline(v = sim_df$changepoints, col = 'red', lty = 'dashed')
 plot(sim_df$data_matrix[2, ], ylab = "Signal", main = "Signal 2")
@@ -102,7 +102,7 @@ plot(sim_df$data_matrix[3, ], ylab = "Signal", main = "Signal 3")
 abline(v = sim_df$changepoints, col = 'red', lty = 'dashed')
 plot(sim_df$data_matrix[4, ], ylab = "Signal", main = "Signal 4")
 abline(v = sim_df$changepoints, col = 'red', lty = 'dashed')
-par(mfrow =  c(1, 1))
+par(old_par_config)
 ```
 
 ### Fitting the model 
@@ -275,9 +275,8 @@ par(mfrow =  c(1, 1))
 ### Reference
 
   This package is an implementation of the method and heuristics discussed in 
-  the [paper](https://arxiv.org/abs/2111.10187) submitted to the Journal of 
-  Applied Statistics, currently available as a pre-print. For citation purposes, 
-  see the reference below.
+  the [paper](https://arxiv.org/abs/2111.10187), currently available as a 
+  pre-print. For citation purposes, see the reference below.
   
   Prates, L., Lemes, R. B., Hünemeier, T., & Leonardi, F. (2021). Population based 
   change-point detection for the identification of homozygosity islands. arXiv 
