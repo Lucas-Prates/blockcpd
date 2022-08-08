@@ -38,6 +38,6 @@ case, it should fluctuate in the middle.
 }
 \examples{
 td = rcpd(nrow = 10, ncol = 10)
-model = fit_blockcpd(td$data_matrix, bootstrap = True)
+model = fit_blockcpd(td$data_matrix, bootstrap = TRUE)
 confidence_plot(model)
 }
