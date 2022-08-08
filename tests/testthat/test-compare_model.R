@@ -1,29 +1,20 @@
-test_that("Compare identical change-point sets",
-          {
-            expect_equal(compare_model(c(1, 2, 3), c(1, 2, 3), 10),
-                         list(haus = 0,
-                              rand = 1,
-                              symdiff = 0,
-                              jaccard = 1)
-            )
-          }
-)
+test_that("Compare identical change-point sets",{
+    metrics = compare_model(c(1, 2, 3), c(1, 2, 3), 10)
+    expect_equal(metrics$haus, 0)
+    expect_equal(metrics$rand, 1)
+    expect_equal(metrics$symdiff, 0)
+    expect_equal(metrics$jaccard, 1)
+})
 
-test_that("Raised error on missing ncol argument",
-          {
-            expect_error(compare_model(c(1, 2, 3), c(1, 2, 3)),
-                         "Error! No blockcpd models were passed and ncol was not provided!",
-            )
-          }
-)
+test_that("Raised error on missing ncol argument",{
+  error_msg =  "Error! No blockcpd models were passed and ncol was not provided!"
+  expect_error(compare_model(c(1, 2, 3), c(1, 2, 3)), error_msg)
+})
 
-test_that("Compare different change-points sets",
-          {
-            expect_equal(round(unlist(compare_model(c(1, 5), c(1, 2, 3), 10)), 3),
-                         round(unlist(list(haus = 2,
-                                           rand = 30/45,
-                                           symdiff = 3,
-                                           jaccard = 0.4)), 3)
-            )
-          }
-)
+test_that("Compare different change-points sets",{
+  metrics = compare_model(c(1, 5), c(1, 2, 3), 10)
+  expect_equal(metrics$haus, 2)
+  expect_equal(round(metrics$rand, 3), round(30/45, 3))
+  expect_equal(metrics$symdiff, 3)
+  expect_equal(metrics$jaccard, 0.4)
+})

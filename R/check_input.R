@@ -33,8 +33,11 @@ check_input = function(caller, args_to_check){
     if((!is.numeric(lambda))||(length(lambda) != 1)){
       stop("Input error! The 'lambda' argument must be a unique numeric value!")
     }
+    if(ncol == 1){
+      stop("Input error! The data passed has only one column!")
+    }
     if((min_block_size > ncol)||(min_block_size <= 0)){
-      stop("Input error! The 'min_block_size' argumenst ranges from 1 to ncol!")
+      stop("Input error! The 'min_block_size' argument ranges from 1 to ncol!")
     }
     if (lambda < 0){
       stop("Input error! The 'lambda' argument must be non-negative!")

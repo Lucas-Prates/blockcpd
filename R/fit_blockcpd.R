@@ -88,9 +88,20 @@ fit_blockcpd = function(data_matrix,
                         bootstrap_samples = 100L,
                         bootstrap_progress = FALSE,
                         skip_input_check = FALSE) {
+  # adjust input in the 1 series case that user passes a vector
+  # instead of a matrix
+  if((is.vector(data_matrix)) &&
+     (typeof(data_matrix) %in% c("logical", "integer", "double"))){
 
-  nrow = nrow(data_matrix)
-  ncol = ncol(data_matrix)
+   nrow = 1
+   ncol = length(data_matrix)
+   data_matrix = t(as.matrix(data_matrix))
+
+  }
+  else{
+    nrow = nrow(data_matrix)
+    ncol = ncol(data_matrix)
+  }
   # input check
   if(!skip_input_check){
     args_to_check = list(method = method,
