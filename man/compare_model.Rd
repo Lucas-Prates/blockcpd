@@ -39,5 +39,9 @@ to compare clusters. The metrics provided are
 }
 }
 \examples{
-compare_model(c(1,2,3,4), c(1), 10) # change-point sets can be passed directly
+model1 = fit_blockcpd(c(0, 1, 0, 1), lambda = 0)
+model2 = fit_blockcpd(c(0, 1, 0, 1), lambda = Inf)
+comparison = compare_model(model1, model2)
+# change-point sets can also be passed directly with ncol
+compare_model(c(1,2,3,4), c(3), 10)
 }
