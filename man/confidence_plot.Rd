@@ -26,10 +26,18 @@ of the the variable corresponding to the change points.}
 \item{pkg}{Graphical package to be used for plotting. Current values are
 "base".}
 }
+\value{
+No return value.
+}
 \description{
 Plots   the estimates of how likely it is for the model to detect a change at
 any given point. True change-points should have confidence near $100\%$,
 while non change-points should have a confidence near $0\%$. It might also be
 difficult to detect a true change-point at the given sample size. In this
 case, it should fluctuate in the middle.
+}
+\examples{
+td = rcpd(nrow = 10, ncol = 10)
+model = fit_blockcpd(td$data_matrix, bootstrap = True)
+confidence_plot(model)
 }

@@ -15,9 +15,17 @@
 \item{pkg}{Graphical package to be used for plotting. Current values are
 "base".}
 }
+\value{
+No return value.
+}
 \description{
 Plots the output of a frv object. It shows how the number of change-points
 estimated by the given model vary with the regularization constant lambda.
 Graphical inspection can be used to choose a proper value for the constant.
 The suggestion is to pick a value in which the curve starts to "flat-out"
+}
+\examples{
+td = rcpd(nrow = 10, ncol = 10)
+frv = select_frv(td$data_matrix)
+plot(frv)
 }

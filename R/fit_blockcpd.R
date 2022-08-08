@@ -76,6 +76,9 @@
 #'  of the metrics for each bootstrap sample, and contains the estimated
 #'  probability of each index being detected as a change point;
 #' }
+#' @examples
+#' fit_blockcpd(c(0, 1, 2, 10, 11), family = "normal", lambda = 1) # single series
+#' fit_blockcpd(matrix(c(0, 1, 0, 0, 0, 0, 1, 1), nrow = 2)) # 2 binary series
 #' @export
 fit_blockcpd = function(data_matrix,
                         method = "hierseg",

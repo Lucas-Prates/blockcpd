@@ -19,6 +19,15 @@
 #' @param ncol The number of variables which the model was fitted on. Only needs
 #' to be passed if both arguments are change point sets instead of a blockcpd
 #' object.
+#' @return Returns a list containing four metrics:
+#' \itemize{
+#'  \item{"haus"} Hausdorff distance;
+#'  \item{"rand"} Rand index;
+#'  \item{"symdiff"} Symmetric difference;
+#'  \item{"jaccard"} Jaccard index.
+#' }
+#' @examples
+#' compare_model(c(1,2,3,4), c(1), 10) # change-point sets can be passed directly
 #' @export
 
 compare_model = function(model1,

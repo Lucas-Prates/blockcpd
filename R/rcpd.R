@@ -44,7 +44,20 @@ generate_na = function(n_samples, prob){
 #'  change point locations. The change points are between 1 and \eqn{ncol-1}. If
 #'  NULL, the change points are sampled uniformly in \eqn{[1, ncol-1]}.
 #' @param  prob_NA Probability of each entry of being NA. Default is 0.
-#'
+#' @return Returns a list containing 3 elements:
+#' #' \itemize{
+#'  \item{"data_matrix"} A matrix containing the data.
+#'  \item{"changepoints"} A numeric vector containing the change-point locations
+#'  \item{"parameters"} A list whose keys are the parameters names and the
+#'  values are vectors containing the parameter for each block.
+#' }
+#' @examples
+#' td = rcpd(nrow = 20, ncol = 10) # 20 Bernoulli series of size 10 with 1 change-point
+#' td = rcpd(nrow = 10, ncol = 100, ncp = 5,
+#'           family = "normal") # 10 normal series of size 100 with 5 change-points
+#' td = rcpd(nrow = 1000, ncol = 100, changepoints = c(10, 40, 79)) # choosing change-points locations
+#' td = rcpd(nrow = 100, ncol = 15, ncp = 2, family = "normal",
+#'           parameters = list(mean = c(1, 2, 3), var = c(4, 5, 6))) # choosing parameters
 #' @export
 rcpd = function(nrow = 100,
                 ncol = 50,

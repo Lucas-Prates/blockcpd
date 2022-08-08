@@ -32,6 +32,12 @@ variable scale, pass the argument 'index_values = seq(0, 150, 15)'.}
 \item{pkg}{Graphical package to be used for plotting. Current values are
 "base".}
 }
+\value{
+No return value.
+}
 \description{
 Plots the selected parameters in a blocked fashion.
+}
+\examples{
+plot(fit_blockcpd(c(1,2,3, 4), family = "exponential", lambda = 0))
 }

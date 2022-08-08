@@ -105,3 +105,7 @@ Fits a blockcpd model to find the best segmentation of the data into blocks.
 Variables in each block have the same distribution and parameter,
 and consecutive blocks have different parameters.
 }
+\examples{
+fit_blockcpd(c(0, 1, 2, 10, 11), family = "normal", lambda = 1) # single series
+fit_blockcpd(matrix(c(0, 1, 0, 0, 0, 0, 1, 1), nrow = 2)) # 2 binary series
+}

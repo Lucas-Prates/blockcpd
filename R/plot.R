@@ -16,6 +16,9 @@
 #' @param pkg Graphical package to be used for plotting. Current values are
 #' "base".
 #' @param ... Other parameters
+#' @return No return value.
+#' @examples
+#' plot(fit_blockcpd(c(1,2,3, 4), family = "exponential", lambda = 0))
 #' @rdname plot.blockcpd
 #' @export
 plot.blockcpd = function(x, ..., parameter = NULL,
@@ -44,13 +47,26 @@ plot.blockcpd = function(x, ..., parameter = NULL,
   changepoints = blockcpd_obj$changepoints
   parameter_vec = blockcpd_obj$parameters[[parameter]]
   if(pkg == "base"){
-    sf = stats::stepfun(index_values[changepoints], parameter_vec)
-    stats::plot.stepfun(sf, xlim = c(index_values[1], index_values[ncol]),
-                        do.points = F,
-                        xaxs = "i", verticals = F,
-                        xlab = index_variable_name, ylab = parameter,
-                        main = paste("Block plot for", parameter, "parameter"))
-    graphics::abline(v = blockcpd_obj$changepoints, col = "red", lty = "dashed")
+    if(ncp > 0){
+      sf = stats::stepfun(index_values[changepoints], parameter_vec)
+      stats::plot.stepfun(sf, xlim = c(index_values[1], index_values[ncol]),
+                          do.points = F,
+                          xaxs = "i", verticals = F,
+                          xlab = index_variable_name, ylab = parameter,
+                          main = paste("Block plot for", parameter, "parameter"))
+      graphics::abline(v = blockcpd_obj$changepoints, col = "red", lty = "dashed")
+    }
+    else{
+      graphics::plot(x = index_values,
+                     y = rep(parameter_vec[1], length(index_values)),
+                     xlim = c(index_values[1], index_values[ncol]),
+                     xaxs = "i",
+                     type = "l",
+                     xlab = index_variable_name, ylab = parameter,
+                     main = paste("Block plot for", parameter, "parameter"))
+      graphics::abline(v = blockcpd_obj$changepoints, col = "red", lty = "dashed")
+
+    }
   }
 
 }
@@ -68,6 +84,11 @@ plot.blockcpd = function(x, ..., parameter = NULL,
 #' @param pkg Graphical package to be used for plotting. Current values are
 #' "base".
 #' @param ... Other parameters
+#' @return No return value.
+#' @examples
+#' td = rcpd(nrow = 10, ncol = 10)
+#' frv = select_frv(td$data_matrix)
+#' plot(frv)
 #' @rdname plot.frv
 #' @export
 plot.frv = function(x, ..., pkg = "base"){
@@ -108,7 +129,11 @@ plot.frv = function(x, ..., pkg = "base"){
 #' @param index_variable_name Name of the variable segmented.
 #' @param pkg Graphical package to be used for plotting. Current values are
 #' "base".
-#'
+#' @return No return value.
+#' @examples
+#' td = rcpd(nrow = 10, ncol = 10)
+#' model = fit_blockcpd(td$data_matrix, bootstrap = True)
+#' confidence_plot(model)
 #' @export
 confidence_plot = function(model, scale = "percentage",
                            index_values = NULL, index_variable_name = "Index",

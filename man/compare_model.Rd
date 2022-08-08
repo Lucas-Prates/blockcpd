@@ -18,6 +18,15 @@ representing the change point set.}
 to be passed if both arguments are change point sets instead of a blockcpd
 object.}
 }
+\value{
+Returns a list containing four metrics:
+\itemize{
+\item{"haus"} Hausdorff distance;
+\item{"rand"} Rand index;
+\item{"symdiff"} Symmetric difference;
+\item{"jaccard"} Jaccard index.
+}
+}
 \description{
 Compares or evaluates model estimated change point set against
 another model or ground truth. The comparison is made using common metrics
@@ -28,4 +37,7 @@ to compare clusters. The metrics provided are
 \item "symdiff": Symmetric difference metric;
 \item "jaccard": Jaccard similarity index.
 }
+}
+\examples{
+compare_model(c(1,2,3,4), c(1), 10) # change-point sets can be passed directly
 }
