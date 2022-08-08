@@ -223,7 +223,7 @@ par(old_par_config)
   
 ### Is that change spurious? Check it with Confidence Plot
 
-  A central question is Statistics is: how confident are you on the fitted
+  A central question in statistics is: how confident are you on the fitted
   model? How do you know the results you obtained are not spurious, that is,
   they are not due to chance?
  
