@@ -41,16 +41,14 @@ compare_model = function(model1,
     blockcpd_flag = TRUE
   } else {cp2 = model2} # cp2 must be a change point set
 
-
-  if (!blockcpd_flag){
-    if (is.null(ncol)){
-      stop("Error! No blockcpd models were passed and ncol was not provided!")
-    }
-  }
-
+  args_to_check = list(ncol = ncol,
+                       blockcpd_flag = blockcpd_flag)
+  check_input("compare_model", args_to_check)
   # Metrics computations in c++
-  haus = compute_hausdorff(cp1, cp2)
+  cp1 = c(cp1, ncol)
+  cp2 = c(cp2, ncol)
   rand = compute_rand(cp1, cp2, ncol)
+  haus = compute_hausdorff(cp1, cp2)
   symdiff = compute_symdiff(cp1, cp2)
   jaccard = compute_jaccard(cp1, cp2)
 

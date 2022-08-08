@@ -39,7 +39,7 @@ Set low values for this parameters if having performance issues on large
 data sets.}
 }
 \description{
-Uses binary splitting to obtain a greedy soltuion to the regularized loss
+Uses binary splitting to obtain a greedy solution to the regularized loss
 optimization problem. Should be called within
 \link[=fit_blockcpd]{fit_blockcpd}
 }

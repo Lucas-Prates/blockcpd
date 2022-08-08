@@ -49,23 +49,24 @@ float compute_rand(IntegerVector cp1,
                          IntegerVector cp2,
                          int const& m){
   cp1.push_front(0);
-  cp1.push_back(m);
   cp2.push_front(0);
-  cp2.push_back(m);
   int len_cp1 = cp1.length();
   int len_cp2 = cp2.length();
-  float M = 0.0; // This is the total sum of M_ij|c1_i - c2_j| from original eq.
-  float M_ij;
+  int diss = 0; // This is the total sum of M_ij|c1_i - c2_j| from original eq.
+  int n_ij;
+  int begin_j = 0;
   for(int i = 0; i < len_cp1 - 1; i++){
-    for(int j = 0; j < len_cp2 - 1; j++){
-      M_ij = std::max(0, std::min(cp1[i + 1], cp2[j + 1]) - std::max(cp1[i], cp2[j]));
-      M += abs(cp1[i]-cp2[j])*M_ij;
+    for(int j = begin_j; j < len_cp2 - 1; j++){
+      n_ij = std::min(cp1[i + 1], cp2[j + 1]) - std::max(cp1[i], cp2[j]);
+      n_ij = std::max(0, n_ij);
+      diss += abs(cp1[i]-cp2[j])*n_ij;
+      if(cp1[i + 1] < cp2[j + 1]) break;
+      else begin_j = j + 1;
     }
   }
-
-  M /= (m*(m - 1)/2);
-
-  return(1 - M);
+  double rand;
+  rand = 1 - ((double) diss/((m*(m - 1.0)/2.0)));
+  return(rand);
 
 }
 

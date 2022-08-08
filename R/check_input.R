@@ -143,4 +143,17 @@ check_input = function(caller, args_to_check){
     }
   }
   #---
+
+  # checks compare_model
+  if(caller == "compare_model"){
+    ncol = args_to_check$ncol
+    blockcpd_flag = args_to_check$blockcpd_flag
+    if (!blockcpd_flag){
+      if (is.null(ncol)){
+        stop("Error! No blockcpd models were passed and ncol was not provided!")
+      }
+    }
+  }
+
+  #---
 }
