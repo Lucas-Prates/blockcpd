@@ -1,2 +1,4 @@
 ^blockcpd\.Rproj$
 ^\.Rproj\.user$
+^codecov\.yml$
+^\.github$
