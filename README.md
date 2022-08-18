@@ -3,8 +3,7 @@ blockcpd: detecting multiple change-points in multiple signals
 
 <!-- badges: start -->
 
-[![Codecov test
-coverage](https://codecov.io/gh/Lucas-Prates/blockcpd/branch/main/graph/badge.svg)](https://app.codecov.io/gh/Lucas-Prates/blockcpd?branch=main)
+[![codecov](https://codecov.io/gh/Lucas-Prates/blockcpd/branch/main/graph/badge.svg?token=YAYW1J4DCT)](https://codecov.io/gh/Lucas-Prates/blockcpd)
 [![R-CMD-check](https://github.com/Lucas-Prates/blockcpd/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/Lucas-Prates/blockcpd/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
@@ -102,11 +101,11 @@ We will better discuss the penalization constant and maximum blocks in
 the next section.
 
 Lets fit the model using “hierseg” (default), the “exponential” family,
-penalization constant equals 1.73 and default penalization.
+penalization constant equals 1 and default penalization.
 
 ``` r
   seg_model = fit_blockcpd(sim_df$data_matrix, family = "exponential", 
-                           lambda = 1.73)
+                           lambda = 1)
 ```
 
 The return object is a S3 class called `blockcpd`. It contains the
@@ -127,8 +126,7 @@ calling `plot` and passing the model as an argument.
 The flat regions corresponds to variables grouped in the same block. The
 height of the block corresponds to the estimated value of the parameter
 for that block. The vertical lines shows where the model detected a
-change-point. In this example, it detected the changes at (50,110,180),
-which are the also true change-points.
+change-point. In this example, it detected the changes at 50, 110, 180.
 
 Since the scale parameter is associated with the expected value of the
 variables for the exponential distribution, we could plot a “average
@@ -184,11 +182,10 @@ to do graphical inspection.
 
 ![](README_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
 
-The function suggests an approximate value of 1.73 for the penalization
-constant, justifying the value we used on the beginning. Plotting the
-result is optional, but it can aid when the automatic suggestion fails.
-**Do not restrict yourself to the suggestion, specially for very small
-values of step.**
+The function suggests an approximate value of 0.6944591 for the
+penalization constant. Plotting the result is optional, but it can aid
+when the automatic suggestion fails. **Do not restrict yourself to the
+suggestion, specially for very small values of step.**
 
 Another way to control over-segmentation is using the `max_blocks`
 argument. When working with a large number of variables, if there is no
