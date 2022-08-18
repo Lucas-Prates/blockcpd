@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
+```{r setup, echo = FALSE}
 ```
 
   Welcome to `blockcpd`! This `R` package allows the user to fit change-point 
@@ -46,7 +46,7 @@ knitr::opts_chunk$set(
 ## Installation
 
   To install the package from this repository, install the
-[devtools](https://CRAN.R-project.org/package=devtools) package 
+[devtools](https://cran.r-project.org/web/packages/devtools/index.html) package 
 and run the command below.
   
 ```{r eval = FALSE}
@@ -73,6 +73,7 @@ devtools::install_github("https://github.com/Lucas-Prates/blockcpd")
   package implements the Normal (Gaussian)  with unknown mean and variance, 
   Poisson, Exponential, Bernoulli and Binary Markov Chain (2-states) 
   distributions.
+
    
 ```{r}
 library(blockcpd)
@@ -121,11 +122,11 @@ par(old_par_config)
   next section.
   
   Lets fit the model using "hierseg" (default), the "exponential" family, 
-  penalization constant equals 1.73 and default penalization.
+  penalization constant equals 1 and default penalization.
 
 ```{r}
   seg_model = fit_blockcpd(sim_df$data_matrix, family = "exponential", 
-                           lambda = 1.73)
+                           lambda = 1)
 ```
 
   The return object is a S3 class called `blockcpd`. It contains the estimated
@@ -143,8 +144,7 @@ par(old_par_config)
   The flat regions corresponds to variables grouped in the same block. The
   height of the block corresponds to the estimated value of the parameter for
   that block. The vertical lines shows where the model detected a change-point.
-  In this example, it detected the changes at (50,110,180), which 
-  are the also true change-points.
+  In this example, it detected the changes at `r seg_model$changepoints`.
   
   Since the scale parameter is associated with the expected value of the 
   variables for the exponential distribution, we could plot a "average signal"
@@ -210,8 +210,8 @@ par(old_par_config)
   plot(frv)
 ```
   
-  The function suggests an approximate value of 1.73 for the penalization 
-  constant, justifying the value we used on the beginning. Plotting the result 
+  The function suggests an approximate value of `r frv$suggested_lambda` for the 
+  penalization constant. Plotting the result 
   is optional, but it can aid when the automatic suggestion fails. 
   **Do not restrict yourself to the suggestion, specially for very small values of step.**
   
@@ -281,4 +281,3 @@ par(old_par_config)
   Prates, L., Lemes, R. B., Hünemeier, T., & Leonardi, F. (2021). Population based 
   change-point detection for the identification of homozygosity islands. arXiv 
   preprint arXiv:2111.10187.
-
