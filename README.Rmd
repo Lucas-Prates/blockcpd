@@ -19,7 +19,7 @@ knitr::opts_chunk$set(
 ```
 
 <!-- badges: start -->
-[![Codecov test coverage](https://codecov.io/gh/Lucas-Prates/blockcpd/branch/main/graph/badge.svg)](https://app.codecov.io/gh/Lucas-Prates/blockcpd?branch=main)
+[![codecov](https://codecov.io/gh/Lucas-Prates/blockcpd/branch/main/graph/badge.svg?token=YAYW1J4DCT)](https://codecov.io/gh/Lucas-Prates/blockcpd)
 [![R-CMD-check](https://github.com/Lucas-Prates/blockcpd/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/Lucas-Prates/blockcpd/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
