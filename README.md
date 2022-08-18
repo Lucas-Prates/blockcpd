@@ -1,6 +1,13 @@
 blockcpd: detecting multiple change-points in multiple signals
 ================
 
+<!-- badges: start -->
+
+[![Codecov test
+coverage](https://codecov.io/gh/Lucas-Prates/blockcpd/branch/main/graph/badge.svg)](https://app.codecov.io/gh/Lucas-Prates/blockcpd?branch=main)
+[![R-CMD-check](https://github.com/Lucas-Prates/blockcpd/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/Lucas-Prates/blockcpd/actions/workflows/R-CMD-check.yaml)
+<!-- badges: end -->
+
 Welcome to `blockcpd`! This `R` package allows the user to fit
 change-point detection models for the task of segmenting repeated
 signals. It also provides tools for plotting, selecting and comparing
@@ -191,7 +198,7 @@ setting small values for `max_blocks`. This will also make
 
 ### Is that change spurious? Check it with Confidence Plot
 
-A central question is Statistics is: how confident are you on the fitted
+A central question in statistics is: how confident are you on the fitted
 model? How do you know the results you obtained are not spurious, that
 is, they are not due to chance?
 
@@ -246,9 +253,8 @@ for `bootstrap_samples`.
 ### Reference
 
 This package is an implementation of the method and heuristics discussed
-in the [paper](https://arxiv.org/abs/2111.10187) submitted to the
-Journal of Applied Statistics, currently available as a pre-print. For
-citation purposes, see the reference below.
+in the [paper](https://arxiv.org/abs/2111.10187), currently available as
+a pre-print. For citation purposes, see the reference below.
 
 Prates, L., Lemes, R. B., Hünemeier, T., & Leonardi, F. (2021).
 Population based change-point detection for the identification of
