@@ -2,9 +2,9 @@
 # Need help debugging build failures? Start at https://github.com/r-lib/actions#where-to-find-help
 on:
   push:
-    branches: [main, master]
+    branches: [main, master, dev]
   pull_request:
-    branches: [main, master]
+    branches: [main, master, dev]
 
 name: R-CMD-check
 
@@ -47,3 +47,11 @@ jobs:
       - uses: r-lib/actions/check-r-package@v2
         with:
           upload-snapshots: true
+
+      - uses: codecov/codecov-action@v3
+        with:
+          files: ./coverage1.xml,./coverage2.xml # optional
+          flags: unittests # optional
+          name: codecov-umbrella # optional
+          fail_ci_if_error: true # optional (default = false)
+          verbose: true # optional (default = false)
