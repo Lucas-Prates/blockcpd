@@ -1,15 +1,13 @@
-# Workflow derived from https://github.com/r-lib/actions/tree/v2/examples
-# Need help debugging build failures? Start at https://github.com/r-lib/actions#where-to-find-help
 on:
   push:
     branches: [main, master, dev]
   pull_request:
     branches: [main, master, dev]
 
-name: R-CMD-check
+name: test-coverage
 
 jobs:
-  R-CMD-check:
+  test-coverage:
     runs-on: ${{ matrix.config.os }}
 
     name: ${{ matrix.config.os }} (${{ matrix.config.r }})
@@ -18,11 +16,7 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - {os: macOS-latest,   r: 'release'}
-          - {os: windows-latest, r: 'release'}
-          - {os: ubuntu-latest,   r: 'devel', http-user-agent: 'release'}
           - {os: ubuntu-latest,   r: 'release'}
-          - {os: ubuntu-latest,   r: 'oldrel-1'}
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
@@ -48,3 +42,12 @@ jobs:
         with:
           upload-snapshots: true
 
+      - uses: actions/checkout@master
+
+      - uses: codecov/codecov-action@v3
+        with:
+          #files: ./coverage1.xml,./coverage2.xml # optional
+          flags: unittests # optional
+          name: codecov-umbrella # optional
+          fail_ci_if_error: true # optional (default = false)
+          verbose: true # optional (default = false)
